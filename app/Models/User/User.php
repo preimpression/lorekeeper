@@ -2,6 +2,8 @@
 
 namespace App\Models\User;
 
+use Cache;
+
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -65,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public $timestamps = true;
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
@@ -73,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get user settings.
      */
-    public function settings() 
+    public function settings()
     {
         return $this->hasOne('App\Models\User\UserSettings');
     }
@@ -81,7 +83,7 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get user-editable profile data.
      */
-    public function profile() 
+    public function profile()
     {
         return $this->hasOne('App\Models\User\UserProfile');
     }
@@ -89,43 +91,43 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the user's notifications.
      */
-    public function notifications() 
+    public function notifications()
     {
         return $this->hasMany('App\Models\Notification');
     }
-    
+
     /**
      * Get all the user's characters, regardless of whether they are full characters of myo slots.
      */
-    public function allCharacters() 
+    public function allCharacters()
     {
         return $this->hasMany('App\Models\Character\Character')->orderBy('sort', 'DESC');
     }
-    
+
     /**
      * Get the user's characters.
      */
-    public function characters() 
+    public function characters()
     {
         return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 0)->orderBy('sort', 'DESC');
     }
-    
+
     /**
      * Get the user's MYO slots.
      */
-    public function myoSlots() 
+    public function myoSlots()
     {
         return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 1)->orderBy('id', 'DESC');
     }
-    
+
     /**
      * Get the user's rank data.
      */
-    public function rank() 
+    public function rank()
     {
         return $this->belongsTo('App\Models\Rank\Rank');
     }
-    
+
     /**
      * Get the user's items.
      */
@@ -135,7 +137,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
@@ -152,7 +154,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -172,7 +174,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function getHasAliasAttribute() 
+    public function getHasAliasAttribute()
     {
         return !is_null($this->alias);
     }
@@ -204,7 +206,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function hasPower($power)
     {
-        return $this->rank->hasPower($power); 
+        return $this->rank->hasPower($power);
     }
 
     /**
@@ -279,8 +281,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return 'User';
     }
 
+    // Check if user is online
+    public function isOnline()
+    {
+      return Cache::has('user-is-online-' . $this->id);
+    }
+
     /**********************************************************************************************
-    
+
         OTHER FUNCTIONS
 
     **********************************************************************************************/
