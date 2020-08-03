@@ -12,30 +12,51 @@ use App\Services\NewsService;
 
 use App\Http\Controllers\Controller;
 
-class NewsController extends Controller
+class BulletinsController extends Controller
 {
+
+
+      /**
+       * Shows the news index.
+       *
+       * @return \Illuminate\Contracts\Support\Renderable
+       */
+      public function getIndex()
+      {
+          if(Auth::check() && Auth::user()->is_news_unread) Auth::user()->update(['is_news_unread' => 0]);
+          return view('bulletins.index', ['newses' => News::where('staff_bulletin', 1)->visible()->orderBy('id', 'DESC')->paginate(10)]);
+      }
+
+
     /**
-     * Shows the news index.
+     * Shows admin bulletins.
      *
+     * @param  int          $id
+     * @param  string|null  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getIndex()
+    public function getBulletins($id, $slug = null)
     {
-        return view('admin.news.news', [
-            'newses' => News::orderBy('created_at', 'DESC')->orderBy('post_at', 'DESC')->paginate(20)
-        ]);
+        $news = News::where('staff_bulletin', 1)->where('id', $id)->where('is_visible', 1)->first();
+
+        if(!$news) abort(404);
+
+        return view('bulletins.bulletins', ['bulletins' => $news]);
     }
+
+
+
 
     /**
      * Shows the create news page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateNews()
+    public function getCreateBulletins()
     {
 
-        return view('admin.news.create_edit_news', [
-            'news' => new News
+        return view('admin.bulletins.create_edit_bulletin', [
+            'bulletins' => new News
         ]);
     }
 
@@ -45,12 +66,12 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditNews($id)
+    public function getEditBulletins($id)
     {
         $news = News::find($id);
         if(!$news) abort(404);
-        return view('admin.news.create_edit_news', [
-            'news' => $news
+        return view('admin.bulletins.create_edit_bulletin', [
+            'bulletins' => $news
         ]);
     }
 
@@ -62,18 +83,19 @@ class NewsController extends Controller
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateEditNews(Request $request, NewsService $service, $id = null)
+    public function postCreateEditBulletins(Request $request, NewsService $service, $id = null)
     {
         $id ? $request->validate(News::$updateRules) : $request->validate(News::$createRules);
         $data = $request->only([
-            'title', 'text', 'post_at', 'is_visible', 'admin_bulletin'
+            'title', 'text', 'post_at', 'is_visible', 'staff_bulletin'
         ]);
+
         if($id && $service->updateNews(News::find($id), $data, Auth::user())) {
-            flash('News updated successfully.')->success();
+            flash('Bulletin updated successfully.')->success();
         }
         else if (!$id && $news = $service->createNews($data, Auth::user())) {
-            flash('News created successfully.')->success();
-            return redirect()->to('admin/news/edit/'.$news->id);
+            flash('Bulletin created successfully.')->success();
+            return redirect()->to('admin/bulletins/edit/'.$news->id);
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
@@ -87,11 +109,11 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getDeleteNews($id)
+    public function getDeleteBulletins($id)
     {
         $news = News::find($id);
-        return view('admin.news._delete_news', [
-            'news' => $news,
+        return view('admin.bulletins._delete_bulletin', [
+            'bulletins' => $news,
         ]);
     }
 
@@ -103,10 +125,10 @@ class NewsController extends Controller
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postDeleteNews(Request $request, NewsService $service, $id)
+    public function postDeleteBulletins(Request $request, NewsService $service, $id)
     {
         if($id && $service->deleteNews(News::find($id))) {
-            flash('News deleted successfully.')->success();
+            flash('Bulletin deleted successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

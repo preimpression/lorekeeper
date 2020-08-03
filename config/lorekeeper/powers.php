@@ -10,7 +10,6 @@ return [
     | The list of staff powers that can be attached to a user rank.
     |
     */
-
     'edit_site_settings' => [
         'name' => 'Edit Site Settings',
         'description' => 'Allow rank to modify site settings and upload new images to replace the site layout images.'
@@ -46,7 +45,11 @@ return [
     'manage_submissions' => [
         'name' => 'Manage Submissions',
         'description' => 'Allow rank to view the submissions queue, edit rewards attached to a submission and approve/reject them.'
-    ]
+    ],
 
+    'staff' => [
+      'name' => 'Staff Member',
+      'description' => 'This is any staff member.'
+    ]
 
 ];

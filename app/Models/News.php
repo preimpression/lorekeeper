@@ -14,7 +14,7 @@ class News extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id', 'text', 'parsed_text', 'title', 'is_visible', 'post_at'
+        'user_id', 'text', 'parsed_text', 'title', 'is_visible', 'post_at', 'staff_bulletin'
     ];
 
     /**
@@ -47,7 +47,7 @@ class News extends Model
         'title' => 'required|between:3,25',
         'text' => 'required',
     ];
-    
+
     /**
      * Validation rules for updating.
      *
@@ -59,21 +59,21 @@ class News extends Model
     ];
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
-    
+
     /**
      * Get the user who created the news post.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User');
     }
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
@@ -90,6 +90,17 @@ class News extends Model
     }
 
     /**
+     * Scope a query to only include admin-only posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeStaffBulletin($query)
+    {
+        return $query->where('staff_bulletin', 1);
+    }
+
+    /**
      * Scope a query to only include posts that are scheduled to be posted and are ready to post.
      *
      * @param  \Illuminate\Database\Eloquent\Builder  $query
@@ -101,7 +112,7 @@ class News extends Model
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -134,5 +145,25 @@ class News extends Model
     public function getUrlAttribute()
     {
         return url('news/'.$this->slug);
+    }
+
+    /**
+     * Displays the news post title, linked to the news post itself.
+     *
+     * @return string
+     */
+    public function getAdminDisplayNameAttribute()
+    {
+        return '<a href="'.$this->adminUrl.'">'.$this->title.'</a>';
+    }
+
+    /**
+     * Gets the news post URL.
+     *
+     * @return string
+     */
+    public function getAdminUrlAttribute()
+    {
+        return url('admin/bulletins/'.$this->slug);
     }
 }

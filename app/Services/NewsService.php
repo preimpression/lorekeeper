@@ -37,10 +37,10 @@ class NewsService extends Service
 
             $news = News::create($data);
 
-            if($news->is_visible) $this->alertUsers();
+            if($news->is_visible && !$news->staff_bulletin) $this->alertUsers();
 
             return $this->commitReturn($news);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -50,7 +50,7 @@ class NewsService extends Service
      * Updates a news post.
      *
      * @param  \App\Models\News       $news
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\News
      */
@@ -66,7 +66,7 @@ class NewsService extends Service
             $news->update($data);
 
             return $this->commitReturn($news);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -86,7 +86,7 @@ class NewsService extends Service
             $news->delete();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -109,7 +109,7 @@ class NewsService extends Service
                 $this->alertUsers();
 
                 return $this->commitReturn(true);
-            } catch(\Exception $e) { 
+            } catch(\Exception $e) {
                 $this->setError('error', $e->getMessage());
             }
             return $this->rollbackReturn(false);
