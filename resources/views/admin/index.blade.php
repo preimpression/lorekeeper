@@ -14,7 +14,7 @@
   <div class="col-12">
       <div class="card mb-3">
       <div class="card-body">
-        <h5 class="card-title">Latest Bulletin: {!! $news->displayName !!}</h5>
+        <h5 class="card-title">Latest Bulletin: {!! $news->adminDisplayName !!}</h5>
         <small>
             Posted {!! $news->post_at ? format_date($news->post_at) : format_date($news->created_at) !!} by {!! $news->user->displayName !!}
         </small>
