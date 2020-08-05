@@ -244,6 +244,7 @@ Route::group(['prefix' => 'bulletins', 'middleware' => 'power:edit_pages'], func
 });
 Route::group(['prefix' => 'bulletins'], function() {
     Route::get('/', 'BulletinsController@getIndex');
+    Route::get('all', 'BulletinsController@getAllIndex');
     Route::get('{id}.{slug?}', 'BulletinsController@getBulletins');
     Route::get('{id}.', 'BulletinsController@getBulletins');
 });

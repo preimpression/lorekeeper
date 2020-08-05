@@ -144,26 +144,7 @@ class News extends Model
      */
     public function getUrlAttribute()
     {
-        return url('news/'.$this->slug);
-    }
-
-    /**
-     * Displays the news post title, linked to the news post itself.
-     *
-     * @return string
-     */
-    public function getAdminDisplayNameAttribute()
-    {
-        return '<a href="'.$this->adminUrl.'">'.$this->title.'</a>';
-    }
-
-    /**
-     * Gets the news post URL.
-     *
-     * @return string
-     */
-    public function getAdminUrlAttribute()
-    {
-        return url('admin/bulletins/'.$this->slug);
+      if(!$this->staff_bulletin) return url('news/'.$this->slug);
+      else return url('admin/bulletins/'.$this->slug);
     }
 }

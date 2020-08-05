@@ -16,16 +16,25 @@ class BulletinsController extends Controller
 {
 
 
-      /**
-       * Shows the news index.
-       *
-       * @return \Illuminate\Contracts\Support\Renderable
-       */
-      public function getIndex()
-      {
-          if(Auth::check() && Auth::user()->is_news_unread) Auth::user()->update(['is_news_unread' => 0]);
-          return view('bulletins.index', ['newses' => News::where('staff_bulletin', 1)->visible()->orderBy('id', 'DESC')->paginate(10)]);
-      }
+        /**
+         * Shows the news index.
+         *
+         * @return \Illuminate\Contracts\Support\Renderable
+         */
+        public function getIndex()
+        {
+            return view('bulletins.index', ['newses' => News::where('staff_bulletin', 1)->visible()->orderBy('id', 'DESC')->paginate(10)]);
+        }
+
+        /**
+         * Shows the news index.
+         *
+         * @return \Illuminate\Contracts\Support\Renderable
+         */
+        public function getAllIndex()
+        {
+            return view('bulletins.all_bulletins', ['newses' => News::where('staff_bulletin', 1)->visible()->orderBy('id', 'DESC')->paginate(30)]);
+        }
 
 
     /**
