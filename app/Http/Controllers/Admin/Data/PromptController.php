@@ -170,7 +170,7 @@ class PromptController extends Controller
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
         return view('admin.prompts.prompts', [
-            'prompts' => $query->paginate(20)->appends($request->query()),
+            'prompts' => $query->paginate(500)->appends($request->query()), //Upped Pagiation is just a BANDAID because otherwise appends() doesn't work.
             'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
 
             'promptCategories' => PromptCategory::orderBy('sort', 'DESC')->get()->prepend([ "id" => 0 ]),
