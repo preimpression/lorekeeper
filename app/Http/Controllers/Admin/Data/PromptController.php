@@ -169,13 +169,24 @@ class PromptController extends Controller
         if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
+
+            $promptCategories = PromptCategory::orderBy('sort', 'DESC')->get() ;
+
+            $promptCategories->count = 0; //Used to fake the count() since it was not pleased with my normal attempts.
+
+            $misc= collect([]); $misc->name = null; $misc->id = null; // Setting up the Miscellaneous pseudo-category.
+
+            $promptCategories->prepend($misc);
+
+            foreach ($promptCategories as $promptCategory) {
+              $promptCategory->prompts = $query->get()->where('prompt_category_id','=',$promptCategory->id);
+              $promptCategories->count += $promptCategory->prompts->count();
+            }
+
         return view('admin.prompts.prompts', [
             'prompts' => $query->paginate(500)->appends($request->query()), //Upped Pagiation is just a BANDAID because otherwise appends() doesn't work.
             'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-
-            'promptCategories' => PromptCategory::orderBy('sort', 'DESC')->get()->prepend([ "id" => 0 ]),
-            'pickPrompts' => $query->get()->groupBy('prompt_category_id'),
-            'count' => Prompt::all()
+            'promptCategories' => $promptCategories
         ]);
     }
 
