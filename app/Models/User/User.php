@@ -292,8 +292,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
       if($onlineYear < Carbon::now()->year-10) $onlineTime = "a long time ago";
 
-      if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" title="This user is online."></i>';
-      else  $result = '<i class="far fa-circle text-secondary mr-2" title="This user was last online ' . $onlineTime .'."></i>';
+      if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" data-toggle="tooltip" title="This user is online."></i>';
+      else  $result = '<i class="far fa-circle text-secondary mr-2" data-toggle="tooltip" title="This user was last online ' . $onlineTime .'."></i>';
 
       return $result;
     }
