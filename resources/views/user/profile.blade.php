@@ -11,13 +11,7 @@
 
 <h1>
     {!! $user->displayName !!}
-
-    @if($user->isOnline())
-      <small><i class="fas fa-circle text-success" title="This user is online."></i></small>
-    @else
-      <small><i class="far fa-circle text-secondary" title="This user is not online."></i></small>
-    @endif
-
+    {!! $user->isOnline() !!}
     @if($user->settings->is_fto)
         <span class="badge badge-success float-right" data-toggle="tooltip" title="This user has not owned any characters from this world before.">FTO</span>
     @endif

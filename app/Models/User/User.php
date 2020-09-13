@@ -3,6 +3,7 @@
 namespace App\Models\User;
 
 use Cache;
+use Carbon\Carbon;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -281,10 +282,20 @@ class User extends Authenticatable implements MustVerifyEmail
         return 'User';
     }
 
-    // Check if user is online
+    // Check if user is online and display When they were online
     public function isOnline()
     {
-      return Cache::has('user-is-online-' . $this->id);
+      $onlineStatus = Cache::has('user-is-online-' . $this->id);
+      $online = Carbon::createFromTimeStamp(strtotime(Cache::get('user-is-online-time-' . $this->id)));
+      $onlineTime = $online->diffForHumans(['parts' => 2, 'join' => true, 'short' => true]);
+      $onlineYear = $online->year;
+
+      if($onlineYear < Carbon::now()->year-10) $onlineTime = "a long time ago";
+
+      if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" title="This user is online."></i>';
+      else  $result = '<i class="far fa-circle text-secondary mr-2" title="This user was last online ' . $onlineTime .'."></i>';
+
+      return $result;
     }
 
     /**********************************************************************************************
