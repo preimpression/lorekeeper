@@ -205,6 +205,39 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+
+});
+
+# DATA
+Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:manage_research'], function() {
+
+    # RESEARCH TREES
+    Route::get('trees', 'TreeController@getIndex');
+    Route::get('trees/create', 'TreeController@getCreateTree');
+    Route::get('trees/edit/{id}', 'TreeController@getEditTree');
+    Route::get('trees/delete/{id}', 'TreeController@getDeleteTree');
+    Route::post('trees/create', 'TreeController@postCreateEditTree');
+    Route::post('trees/edit/{id?}', 'TreeController@postCreateEditTree');
+    Route::post('trees/delete/{id}', 'TreeController@postDeleteTree');
+    Route::post('trees/sort', 'TreeController@postSortTree');
+
+    Route::get('research', 'ResearchController@getIndex');
+    Route::get('research/create', 'ResearchController@getCreateResearch');
+    Route::get('research/edit/{id}', 'ResearchController@getEditResearch');
+    Route::get('research/delete/{id}', 'ResearchController@getDeleteResearch');
+    Route::get('research/parent', 'ResearchController@getParentBranch');
+    Route::post('research/create', 'ResearchController@postCreateEditResearch');
+    Route::post('research/edit/{id?}', 'ResearchController@postCreateEditResearch');
+    Route::post('research/delete/{id}', 'ResearchController@postDeleteResearch');
+    Route::post('research/sort', 'ResearchController@postSortResearch');
+
+    Route::get('research/users', 'ResearchController@getUserResearchIndex');
+
+});
+# GRANTS
+Route::group(['prefix' => 'grants', 'namespace' => 'Users', 'middleware' => 'power:manage_research'], function() {
+    Route::get('research', 'GrantController@getResearch');
+    Route::post('research', 'GrantController@postResearch');
 });
 
 

@@ -141,6 +141,21 @@ class UserController extends Controller
     }
 
     /**
+     * Shows a user's currency logs.
+     *
+     * @param  string  $name
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getUserResearchLogs($name)
+    {
+        $user = $this->user;
+        return view('user.currency_logs', [
+            'user' => $this->user,
+            'logs' => $this->user->getResearchLogs(0)
+        ]);
+    }
+
+    /**
      * Shows a user's item logs.
      *
      * @param  string  $name

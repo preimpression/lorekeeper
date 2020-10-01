@@ -46,6 +46,10 @@ return [
     'manage_submissions' => [
         'name' => 'Manage Submissions',
         'description' => 'Allow rank to view the submissions queue, edit rewards attached to a submission and approve/reject them.'
+    ],
+    'manage_research' => [
+        'name' => 'Manage Research',
+        'description' => 'Allow rank to create, edit, and delete Research and Research Trees.'
     ]
 
 
