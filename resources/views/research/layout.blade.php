@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title') 
-    Shops :: 
+    Research :: 
     @yield('research-title')
 @endsection
 

@@ -1,6 +1,6 @@
 @extends($type[0].'.layout')
 
-@section($type[1].'-title') {!! $type[0] != 'research' ? $user->displayName.'\'s' : 'My' !!} Unlocked Research @endsection
+@section($type[1].'-title') {!! $type[0] != 'research' ? $user->name.'\'s' : 'My' !!} Unlocked Research @endsection
 
 @section($type[1].'-content')
 {!! breadcrumbs(['Users' => 'users', $user->name => $user->url, 'Research' => $user->url . '/unlocked-research']) !!}
@@ -9,7 +9,6 @@
 <h1>
     {!! $type[0] != 'research' ? $user->displayName.'\'s' : 'My' !!} Unlocked Research
 </h1>
-
 
 @foreach($trees as $tree)
     <hr>
@@ -26,8 +25,6 @@
         @endforeach
     </div>
 @endforeach
-    
-
 
 <script>
     $(function () {

@@ -248,7 +248,7 @@ return [
 
     // RESEARCH_GRANT
     100 => [
-        'message' => 'You have received a staff grant of <a href="{research_url}">{research_name}</a> (of <a href="{tree_url}">{tree_name}</a>) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">View Research Tree</a>)',
-        'url' => 'research/history'
+        'message' => 'You have received a staff grant of <a href="{research_url}">{research_name}</a> (of <a href="{tree_url}">{tree_name}</a>) from <a href="{sender_url}">{sender_name}</a>. (<a href="{url}">Unlocked Research</a>)',
+        'url' => 'research/unlocked'
     ],
 ];

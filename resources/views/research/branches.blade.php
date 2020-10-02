@@ -1,6 +1,6 @@
 @extends('research.layout')
 
-@section('research-title') Research @endsection
+@section('research-title') Index @endsection
 
 @section('research-content')
 {!! breadcrumbs(['Research' => 'research']) !!}

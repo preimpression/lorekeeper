@@ -40,9 +40,6 @@
     </div>
 
     <div class="form-group col-12 col-md-3 px-0 px-md-1" id="parentSpot">
-        <!-- {!! Form::label('Parent (Optional)') !!} {!! add_help('This is the branch under which the research is. <br><strong>If left blank, this will be \'top level.\'</strong>""') !!}
-        {!! Form::select('parent_id', [0=>'Select a Tree First'] + $branches, $research->parent_id, ['class' => 'form-control selectize', 'disabled' => true]) !!} -->
-
         @if(!isset($research->tree_id))
             {!! Form::label('Parent (Optional)') !!} {!! add_help('This is the branch under which the research is. <br><strong>If left blank, this will be \'top level.\'</strong>""') !!}
             {!! Form::select('parent_id', [0=>'Select a Tree First'], null, ['class' => 'form-control selectize', 'disabled' => true]) !!}
@@ -50,8 +47,6 @@
             {!! Form::label('Parent (Optional)') !!} {!! add_help('This is the branch under which the research is. <br><strong>If left blank, this will be \'top level.\'</strong>""') !!}
             {!! Form::select('parent_id', [0=>'Choose a Parent'] + $prereq_branches, isset($research) ? $research->parent_id : null, ['class' => 'form-control selectize']) !!}
         @endif
-
-
     </div>
     <div class="form-group col-12 row col-md-6 px-0 pl-md-1 pr-md-0">
         <div class="col-12">{!! Form::label('Prerequisite (Optional)') !!} {!! add_help('This prerequisite is required in order to purchase this research. Generally is the same as Parent. If it is the same, hit the toggle and don\'t worry about the field.') !!}</div>
