@@ -263,7 +263,7 @@ class ResearchService extends Service
                     return true;
                 }
             }
-            else true;
+            else return true;
         }
         catch(\Exception $e) { 
             return false;
