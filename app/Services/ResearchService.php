@@ -53,7 +53,7 @@ class ResearchService extends Service
             if ($image) {
                 $tree->image_url = $tree->id . '-image.' . $image->getClientOriginalExtension();
                 $tree->update();
-                $this->handleImage($image, $tree->treeImagePath, $tree->treeImageFileName, );
+                $this->handleImage($image, $tree->treeImagePath, $tree->treeImageFileName, null);
             }
 
             return $this->commitReturn($tree);

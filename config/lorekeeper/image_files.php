@@ -46,5 +46,10 @@ return [
         'name' => 'MYO Default Image (Thumbnail)',
         'description' => 'The default masterlist thumbnail used for MYO slots when no image is uploaded. PNG format, size of masterlist thumbnails.',
         'filename' => 'myo-th.png'
+    ],
+    'research-tree' => [
+        'name' => 'Research Tree Icon',
+        'description' => 'The research tree graphic on the front page. PNG format, default size of 200px x 200px (no restriction)',
+        'filename' => 'research-tree.png'
     ]
 ];
