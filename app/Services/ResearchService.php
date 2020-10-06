@@ -253,7 +253,7 @@ class ResearchService extends Service
     {
         try
         {
-            if($research->children)
+            if(count($research->children))
             {
                 foreach($research->children as $research)
                 {
