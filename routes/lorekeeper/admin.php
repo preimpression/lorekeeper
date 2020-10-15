@@ -268,6 +268,8 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
 
     Route::get('create-myo', 'CharacterController@getCreateMyo');
     Route::post('create-myo', 'CharacterController@postCreateMyo');
+
+    Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function() {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
@@ -277,9 +279,11 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware'
     # IMAGES
     Route::get('{slug}/image', 'CharacterImageController@getNewImage');
     Route::post('{slug}/image', 'CharacterImageController@postNewImage');
+    Route::get('image/subtype', 'CharacterImageController@getNewImageSubtype');
 
     Route::get('image/{id}/traits', 'CharacterImageController@getEditImageFeatures');
     Route::post('image/{id}/traits', 'CharacterImageController@postEditImageFeatures');
+    Route::get('image/traits/subtype', 'CharacterImageController@getEditImageSubtype');
 
     Route::get('image/{id}/notes', 'CharacterImageController@getEditImageNotes');
     Route::post('image/{id}/notes', 'CharacterImageController@postEditImageNotes');
