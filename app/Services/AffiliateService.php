@@ -27,7 +27,7 @@ class AffiliateService extends Service
                 'staff_id' => $user,
                 'status' => 'Accepted',
                 'is_featured' => isset($data['is_featured']) && $data['is_featured'] ? intval($data['is_featured']) : 0,
-                'staff_comment' => isset($data['description']) ? parse($data['description']) : null,
+                'staff_comment' => isset($data['staff_comment']) ? parse($data['staff_comment']) : null,
                 'image_url' => isset($data['image_url']) ? $data['image_url'] : null,
                 'description' => isset($data['description']) ? parse($data['description']) : null,
                 'message' => isset($data['message']) ? parse($data['message']) : null,
