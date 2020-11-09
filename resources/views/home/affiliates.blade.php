@@ -26,7 +26,7 @@
                 {!! $affiliate->icon !!}
             @endforeach
         @else
-            No affiliates
+            No affiliates found.
         @endif
 </div>
 
