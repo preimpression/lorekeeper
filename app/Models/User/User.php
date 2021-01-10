@@ -467,4 +467,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return CharacterBookmark::where('user_id', $this->id)->where('character_id', $character->id)->first();
     }
+
+    /** 
+     * Checks if the user has a specific research unlocked and attached to its account.
+     * 
+     * @return bool
+     */
+    public function hasResearch($id)
+    {
+        return $this->researches->contains(Research::find($id));
+    }
 }
