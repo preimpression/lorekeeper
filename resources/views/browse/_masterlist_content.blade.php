@@ -25,19 +25,20 @@
                         {!! Form::select('subtype_id', $subtypes, Request::get('subtype_id'), ['class' => 'form-control']) !!}
                     </div>
                 @endif
+                <hr/>
                 <div class="masterlist-search-field">
-                    {!! Form::label('username', 'Owner Name: ') !!}
-                    {!! Form::text('username', Request::get('username'), ['class' => 'form-control']) !!}
+                    {!! Form::label('owner', 'Owner Username: ') !!}
+                    {!! Form::select('owner', $userOptions, Request::get('owner'), ['class'=> 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
                 </div>
                 <div class="masterlist-search-field">
-                    {!! Form::label('artist', 'Artist Alias: ') !!}
-                    {!! Form::text('artist', Request::get('artist'), ['class' => 'form-control']) !!}
+                    {!! Form::label('artist', 'Artist: ') !!}
+                    {!! Form::select('artist', $userOptions, Request::get('artist'), ['class'=> 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
                 </div>
                 <div class="masterlist-search-field">
-                    {!! Form::label('designer', 'Designer Alias: ') !!}
-                    {!! Form::text('designer', Request::get('designer'), ['class' => 'form-control']) !!}
+                    {!! Form::label('designer', 'Designer: ') !!}
+                    {!! Form::select('designer', $userOptions, Request::get('designer'), ['class'=> 'form-control mr-2 userselectize', 'style' => 'width: 250px', 'placeholder' => 'Select a User']) !!}
                 </div>
-                <hr />
+                <hr/>
                 <div class="masterlist-search-field">
                     {!! Form::label('sale_value_min', 'Resale Minimum ($): ') !!}
                     {!! Form::text('sale_value_min', Request::get('sale_value_min'), ['class' => 'form-control']) !!}
@@ -50,6 +51,10 @@
                     <div class="masterlist-search-field">
                         {!! Form::label('is_gift_art_allowed', 'Gift Art Status: ') !!}
                         {!! Form::select('is_gift_art_allowed', [0 => 'Any', 2 => 'Ask First', 1 => 'Yes', 3 => 'Yes OR Ask First'], Request::get('is_gift_art_allowed'), ['class' => 'form-control']) !!}
+                    </div>
+                    <div class="masterlist-search-field">
+                        {!! Form::label('is_gift_writing_allowed', 'Gift Writing Status: ') !!}
+                        {!! Form::select('is_gift_writing_allowed', [0 => 'Any', 2 => 'Ask First', 1 => 'Yes', 3 => 'Yes OR Ask First'], Request::get('is_gift_writing_allowed'), ['class' => 'form-control']) !!}
                     </div>
                 @endif
                 <br />
@@ -88,7 +93,7 @@
                     {!! Form::checkbox('search_images', 1, Request::get('search_images'), ['class' => 'form-check-input mr-3',  'data-toggle' => 'toggle']) !!}
                     <span class="ml-2">Include all character images in search {!! add_help('Each character can have multiple images for each updated version of the character, which captures the traits on that character at that point in time. By default the search will only search on the most up-to-date image, but this option will retrieve characters that match the criteria on older images - you may get results that are outdated.') !!}</span>
                 </div>
-                
+
             </div>
 
         </div>

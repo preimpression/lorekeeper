@@ -39,9 +39,12 @@
                     <td>
                         <h5 class="mb-0">{!! $bookmark->character->displayName !!}</h5>
                         {!! $bookmark->character->image->species_id ? $bookmark->character->image->species->displayName : 'No Species' !!} ・ {!! $bookmark->character->image->rarity_id ? $bookmark->character->image->rarity->displayName : 'No Rarity' !!} ・ {!! $bookmark->character->displayOwner !!}
-                        
-                        @if($bookmark->character->is_gift_art_allowed && !$bookmark->character->is_myo_slot)
-                            <div><i class="text-success far fa-circle fa-fw mr-2"></i> Gift art is allowed</div>
+
+                        @if($bookmark->character->is_gift_art_allowed > 0 && !$bookmark->character->is_myo_slot)
+                            <div><i class="{{$bookmark->character->is_gift_art_allowed == 1 ? 'text-success' : 'text-warning'}} far fa-circle fa-fw mr-2"></i> {{$bookmark->character->is_gift_art_allowed == 1 ? 'Gift art is allowed' : 'Ask First before gift art'}}</div>
+                        @endif
+                        @if($bookmark->character->is_gift_writing_allowed > 0 && !$bookmark->character->is_myo_slot)
+                            <div><i class="{{$bookmark->character->is_gift_writing_allowed == 1 ? 'text-success' : 'text-warning'}} far fa-circle fa-fw mr-2"></i> {{$bookmark->character->is_gift_writing_allowed == 1 ? 'Gift writing is allowed' : 'Ask First before gift writing'}}</div>
                         @endif
                         @if($bookmark->character->is_trading)
                             <div><i class="text-success far fa-circle fa-fw mr-2"></i> Open for trades</div>
@@ -53,6 +56,7 @@
                     <td>
                         <i class="fas fa-exchange-alt fa-lg fa-fw mr-2 {{ $bookmark->notify_on_trade_status ? 'text-success' : 'text-danger' }}" data-toggle="tooltip" title="Open For Trade status changes"></i>
                         <i class="fas fa-gift fa-lg fa-fw mr-2 {{ $bookmark->notify_on_gift_art_status ? 'text-success' : 'text-danger' }}" data-toggle="tooltip" title="Gift Art Allowed status changes"></i>
+                        <i class="fas fa-pen-square fa-lg fa-fw mr-2 {{ $bookmark->notify_on_gift_writing_status ? 'text-success' : 'text-danger' }}" data-toggle="tooltip" title="Gift Writing Allowed status changes"></i>
                         <i class="fas fa-user fa-lg fa-fw mr-2 {{ $bookmark->notify_on_transfer ? 'text-success' : 'text-danger' }}" data-toggle="tooltip" title="Character's owner changes"></i>
                         <i class="far fa-image fa-lg fa-fw mr-2 {{ $bookmark->notify_on_image ? 'text-success' : 'text-danger' }}" data-toggle="tooltip" title="A new image is uploaded"></i>
 
@@ -111,7 +115,7 @@
                 $thumbButton.addClass('active');
                 $listButton.removeClass('active');
                 window.localStorage.setItem('lorekeeper_bookmark_view', 'thumbs');
-            }   
+            }
             else if (view == 'list') {
                 $listButton.addClass('active');
                 $thumbnails.addClass('hide');
@@ -125,7 +129,7 @@
             var $this = $(this);
             loadModal("{{ url('account/bookmarks/edit') }}" + '/' + $this.data('id'), 'Edit Bookmark');
         });
-        
+
         $('.delete-bookmark-button').on('click', function(e) {
             e.preventDefault();
             var $this = $(this);

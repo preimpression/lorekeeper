@@ -23,12 +23,25 @@ return [
             ]
         ]
     ],
+    'Reports' => [
+        'power' => 'manage_reports',
+        'links' => [
+            [
+                'name' => 'Report Queue',
+                'url' => 'admin/reports/pending'
+            ]
+        ]
+    ],
     'Site' => [
         'power' => 'edit_pages',
         'links' => [
             [
                 'name' => 'News',
                 'url' => 'admin/news'
+            ],
+            [
+                'name' => 'Sales',
+                'url' => 'admin/sales'
             ],
             [
                 'name' => 'Pages',
@@ -53,6 +66,14 @@ return [
         'power' => 'manage_submissions',
         'links' => [
             [
+                'name' => 'Gallery Submissions',
+                'url' => 'admin/gallery/submissions'
+            ],
+            [
+                'name' => 'Gallery Currency Awards',
+                'url' => 'admin/gallery/currency'
+            ],
+            [
                 'name' => 'Prompt Submissions',
                 'url' => 'admin/submissions'
             ],
@@ -72,84 +93,6 @@ return [
             [
                 'name' => 'Item Grants',
                 'url' => 'admin/grants/items'
-            ],
-        ]
-    ],
-    'Data' => [
-        'power' => 'edit_data',
-        'links' => [
-            [
-                'name' => 'Rarities',
-                'url' => 'admin/data/rarities'
-            ],
-            [
-                'name' => 'Species',
-                'url' => 'admin/data/species'
-            ],
-            [
-                'name' => 'Subtypes',
-                'url' => 'admin/data/subtypes'
-            ],
-            [
-                'name' => 'Trait Categories',
-                'url' => 'admin/data/trait-categories'
-            ],
-            [
-                'name' => 'Traits',
-                'url' => 'admin/data/traits'
-            ],
-            [
-                'name' => 'Item Categories',
-                'url' => 'admin/data/item-categories'
-            ],
-            [
-                'name' => 'Items',
-                'url' => 'admin/data/items'
-            ],
-            [
-                'name' => 'Shops',
-                'url' => 'admin/data/shops'
-            ],
-            [
-                'name' => 'Prompt Categories',
-                'url' => 'admin/data/prompt-categories'
-            ],
-            [
-                'name' => 'Prompts',
-                'url' => 'admin/data/prompts'
-            ],
-            [
-                'name' => 'Character Categories',
-                'url' => 'admin/data/character-categories'
-            ],
-            [
-                'name' => 'Currencies',
-                'url' => 'admin/data/currencies'
-            ],
-            [
-                'name' => 'Loot Tables',
-                'url' => 'admin/data/loot-tables'
-            ],
-        ]
-    ],
-    'Research' => [
-        'power' => 'manage_research',
-        'links' => [
-            [
-                'name' => 'Research Trees',
-                'url' => 'admin/data/trees'
-            ],
-            [
-                'name' => 'Research Branches',
-                'url' => 'admin/data/research'
-            ],
-            [
-                'name' => 'Research Grants',
-                'url' => 'admin/grants/research'
-            ],
-            [
-                'name' => 'User Research Log',
-                'url' => 'admin/data/research/users'
             ],
         ]
     ],
@@ -179,6 +122,80 @@ return [
             [
                 'name' => 'MYO Approvals',
                 'url' => 'admin/myo-approvals/pending'
+            ],
+        ]
+    ],
+    'Data' => [
+        'power' => 'edit_data',
+        'links' => [
+            [
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
+            ],
+            [
+                'name' => 'Character Categories',
+                'url' => 'admin/data/character-categories'
+            ],
+            [
+                'name' => 'Sub Masterlists',
+                'url' => 'admin/data/sublists'
+            ],
+            [
+                'name' => 'Rarities',
+                'url' => 'admin/data/rarities'
+            ],
+            [
+                'name' => 'Species',
+                'url' => 'admin/data/species'
+            ],
+            [
+                'name' => 'Subtypes',
+                'url' => 'admin/data/subtypes'
+            ],
+            [
+                'name' => 'Traits',
+                'url' => 'admin/data/traits'
+            ],
+            [
+                'name' => 'Shops',
+                'url' => 'admin/data/shops'
+            ],
+            [
+                'name' => 'Currencies',
+                'url' => 'admin/data/currencies'
+            ],
+            [
+                'name' => 'Prompts',
+                'url' => 'admin/data/prompts'
+            ],
+            [
+                'name' => 'Loot Tables',
+                'url' => 'admin/data/loot-tables'
+            ],
+            [
+                'name' => 'Items',
+                'url' => 'admin/data/items'
+            ],
+        ]
+    ],    
+    'Research' => [
+        'power' => 'manage_research',
+        'links' => [
+            [
+                'name' => 'Research Trees',
+                'url' => 'admin/data/trees'
+            ],
+            [
+                'name' => 'Research Branches',
+                'url' => 'admin/data/research'
+            ],
+            [
+                'name' => 'Research Grants',
+                'url' => 'admin/grants/research'
+            ],
+            [
+                'name' => 'User Research Log',
+                'url' => 'admin/data/research/users'
             ],
         ]
     ],
