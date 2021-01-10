@@ -14,6 +14,7 @@ use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
 use App\Models\Item\ItemLog;
 use App\Models\Shop\ShopLog;
+use App\Models\Research\Research;
 use App\Models\Research\ResearchLog;
 use App\Models\User\UserCharacterLog;
 use App\Models\Submission\Submission;

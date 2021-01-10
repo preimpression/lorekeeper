@@ -10,7 +10,6 @@ use App\Models\User\User;
 use App\Models\Item\Item;
 use App\Models\Currency\Currency;
 use App\Models\Research\Research;
-use App\Models\User\User;
 
 use App\Services\CurrencyManager;
 use App\Services\InventoryManager;

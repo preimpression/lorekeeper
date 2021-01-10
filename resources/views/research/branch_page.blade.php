@@ -55,13 +55,13 @@
                 <strong>{{ $research->name }} is not currently available for purchase</strong>
             </a>
         </h5>
-    @elseif(Auth::user()->researches->contains($research))
+    @elseif(Auth::user()->hasResearch($research->id))
         <h5 class="text-center">
             <a  class="btn btn-outline-danger mt-3 purchase-research-button disabled">
                 <strong>You already have {{ $research->name }}!</strong>
             </a>
         </h5>
-    @elseif($research->prerequisite && !Auth::user()->researches->contains($research->prerequisite))
+    @elseif($research->prerequisite && !Auth::user()->hasResearch($research->prerequisite->id))
     
         <h5 class="text-center mt-3 mb-0 pb-0 font-weight-bold text-danger"> {{ $research->name }} requires {{ $research->prerequisite->name }}</h5>
         
@@ -86,7 +86,7 @@
 
 @endauth
 @guest
-    <p class="text-center mt-5"><em>Log in to purchase for {{ $research->price }} {{ $research->tree->currency->name }}.</em></p>
+    <p class="text-center mt-5 text-italic">Log in to purchase for {{ $research->price }} {{ $research->tree->currency->name }}.</p>
 @endguest
 
 
