@@ -13,7 +13,7 @@ use App\Services\AffiliateService;
 
 class AffiliateController extends Controller
 {
-    
+
     /**
      * Shows the homepage.
      *
@@ -26,7 +26,7 @@ class AffiliateController extends Controller
             'affiliates' => Affiliate::where('status','Accepted')->get()->paginate(10),
         ]);
     }
-    
+
     /**
      * Shows the homepage.
      *
@@ -38,7 +38,7 @@ class AffiliateController extends Controller
             'affiliate' => new Affiliate
         ]);
     }
-    
+
     /**
      * Shows the homepage.
      *
@@ -50,7 +50,7 @@ class AffiliateController extends Controller
             'affiliate' => Affiliate::find($id),
         ]);
     }
-    
+
     /**
      * Shows the homepage.
      *
@@ -76,7 +76,7 @@ class AffiliateController extends Controller
         }
         return redirect()->to('admin/affiliates');
     }
-    
+
     /**
      * Shows the status of an affiliate request.
      *
@@ -91,7 +91,7 @@ class AffiliateController extends Controller
             'affiliate' => $affiliate
         ]);
     }
-    
+
     /**
      * Shows the submission index page.
      *
@@ -102,7 +102,7 @@ class AffiliateController extends Controller
     {
         $affiliates = Affiliate::where('status', $status ? ucfirst($status) : 'Pending');
         $data = $request->only(['sort']);
-        if(isset($data['sort'])) 
+        if(isset($data['sort']))
         {
             switch($data['sort']) {
                 case 'newest':
@@ -112,7 +112,7 @@ class AffiliateController extends Controller
                     $affiliates->sortOldest();
                     break;
             }
-        } 
+        }
         else $affiliates->sortOldest();
         return view('admin.affiliates.affiliates', [
             'affiliates' => $affiliates->paginate(10)->appends($request->query())
@@ -171,13 +171,31 @@ class AffiliateController extends Controller
      */
     public function getDeleteAffiliate($id)
     {
-
         $affiliate = Affiliate::find($id);
         if(!$affiliate) abort(404);
 
         return view('admin.affiliates._delete_modal', [
             'affiliate' => $affiliate
         ]);
+    }
+
+    /**
+     * Deletes an affiliate.
+     *
+     * @param  \Illuminate\Http\Request             $request
+     * @param  App\Services\AffiliateService        $service
+     * @param  int                                  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postDeleteAffiliate(Request $request, AffiliateService $service, $id)
+    {
+        if($id && $service->deleteAffiliate(Affiliate::find($id))) {
+            flash('Affiliate deleted successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->to('admin/affiliates/current');
     }
 
 

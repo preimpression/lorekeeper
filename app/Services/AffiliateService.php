@@ -38,7 +38,7 @@ class AffiliateService extends Service
             $affiliate = Affiliate::create($saveData);
 
             return $this->commitReturn($affiliate);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -53,7 +53,7 @@ class AffiliateService extends Service
 
         try {
             if(!$affiliate) abort(404);
-            
+
             if(Auth::check()) $user = Auth::user()->id;
 
             $saveData = [
@@ -69,7 +69,7 @@ class AffiliateService extends Service
             $affiliate->update($saveData);
 
             return $this->commitReturn($affiliate);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -106,7 +106,7 @@ class AffiliateService extends Service
 
 
             return $this->commitReturn($affiliate);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -141,10 +141,32 @@ class AffiliateService extends Service
             }
 
             return $this->commitReturn($affiliate);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
+
+    /**
+     * Deletes an affiliate.
+     *
+     * @param  \App\Models\Affiliate\Affiliate  $affiliate
+     * @return bool
+     */
+    public function deleteAffiliate($affiliate)
+    {
+        DB::beginTransaction();
+
+        try {
+            if(!$affiliate) throw new \Exception("This affiliate doesn't exist.");
+            $affiliate->delete();
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
 
 }
