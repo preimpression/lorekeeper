@@ -13,6 +13,7 @@ use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Character\CharacterTransfer;
 use App\Models\Trade;
 use App\Models\Report\Report;
+use App\Models\Affiliate;
 
 use App\Http\Controllers\Controller;
 
@@ -41,7 +42,8 @@ class HomeController extends Controller
             'galleryRequireApproval' => $galleryRequireApproval,
             'galleryCurrencyAwards' => $galleryCurrencyAwards,
             'gallerySubmissionCount' => GallerySubmission::collaboratorApproved()->where('status', 'Pending')->count(),
-            'galleryAwardCount' => GallerySubmission::requiresAward()->where('is_valued', 0)->count()
+            'galleryAwardCount' => GallerySubmission::requiresAward()->where('is_valued', 0)->count(),
+            'affiliateCount' => Affiliate::where('status', 'Pending')->count(),
         ]);
     }
 }

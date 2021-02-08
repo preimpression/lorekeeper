@@ -265,6 +265,24 @@ Route::group(['prefix' => 'sales', 'middleware' => 'power:edit_pages'], function
     Route::post('delete/{id}', 'SalesController@postDeleteSales');
 });
 
+# AFFILIATES
+Route::group(['prefix' => 'affiliates', 'middleware' => 'power:manage_affiliates'], function() {
+    Route::get('/', 'AffiliateController@getIndex');
+    Route::get('/current', 'AffiliateController@getIndex');
+    Route::get('/{status}', 'AffiliateController@getQueue')->where('status', 'pending|accepted|rejected');
+
+    Route::get('create', 'AffiliateController@getCreateAffiliate');
+    Route::get('edit/{id}', 'AffiliateController@getEditAffiliate');
+    Route::get('delete/{id}', 'AffiliateController@getDeleteAffiliate');
+    Route::get('edit/{id}/accept', 'AffiliateController@getAcceptAffiliate');
+    Route::get('edit/{id}/reject', 'AffiliateController@getRejectAffiliate');
+
+    Route::post('create', 'AffiliateController@postCreateEditAffiliate');
+    Route::post('edit/{id?}', 'AffiliateController@postCreateEditAffiliate');
+    Route::post('edit/{id}/{action}', 'AffiliateController@postAffiliate')->where('action', 'accept|reject');
+    Route::post('delete/{id}', 'AffiliateController@postDeleteAffiliate');
+});
+
 # SITE SETTINGS
 Route::group(['prefix' => 'settings', 'middleware' => 'power:edit_site_settings'], function() {
     Route::get('/', 'SettingsController@getIndex');

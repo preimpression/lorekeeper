@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Auth;
 use DB;
+use Settings;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\SitePage;
+use App\Models\Affiliate;
 
 use App\Services\DeviantArtService;
 
@@ -30,11 +32,15 @@ class HomeController extends Controller
      */
     public function getIndex()
     {
+
         return view('welcome', [
-            'about' => SitePage::where('key', 'about')->first()
+            'about' => SitePage::where('key', 'about')->first(),
+            'open' => intval(Settings::get('affiliates_open')),
+            'affiliates' => Affiliate::where('status','Accepted')->featured(0)->inRandomOrder()->limit(10)->get(),
+            'featured_affiliates' => Affiliate::where('status','Accepted')->featured(1)->get(),
         ]);
     }
-
+    
     /**
      * Shows the dA account linking page.
      *

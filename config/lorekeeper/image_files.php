@@ -62,4 +62,14 @@ return [
         'description' => 'Thumbnail used for gallery submissions with a set content warning. PNG format, size of masterlist thumbnails.',
         'filename' => 'content_warning.png'
     ],
+    'affiliate' => [
+        'name' => 'Default Affiliate Image',
+        'description' => 'If an affiliate doesn\'t have an affiliate image for whatever reason, use this!',
+        'filename' => 'affiliate.png'
+    ],
+    'our_affiliate' => [
+        'name' => 'Site Affiliate Image',
+        'description' => 'This is your site\'s affiliate icon!',
+        'filename' => 'our_affiliate.png'
+    ],
 ];

@@ -266,7 +266,23 @@ class AddSiteSettings extends Command
         }
         else $this->line("Skipped: group_currency");
 
-        $this->line("\nSite settings up to date!");
+        /**
+        * AFFILIATES
+        * Setting determines whether affiliates are open or closed.
+        */
+        if(!DB::table('site_settings')->where('key', 'affiliates_open')->exists()) {
+            DB::table('site_settings')->insert([
+                [
+                    'key' => 'affiliates_open',
+                    'value' => 0,
+                    'description' => 'Are you open for affiliates? 0: Disabled, 1: Enabled.'
+                ]
+            ]);
+            $this->info("Added:   affiliates_open / Default: 1");
+        }
+        else $this->line("Skipped: affiliates_open");
 
+
+        $this->line("\nSite settings up to date!");
     }
 }

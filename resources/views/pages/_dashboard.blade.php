@@ -58,3 +58,5 @@
         </div>
     </div>
 </div>
+
+@include('widgets._affiliates', ['affiliates' => $affiliates, 'featured' => $featured_affiliates, 'open' => $open])

@@ -32,6 +32,19 @@ return [
             ]
         ]
     ],
+    'Affiliates' => [
+        'power' => 'manage_affiliates',
+        'links' => [
+            [
+                'name' => 'Approved Affiliates',
+                'url' => 'admin/affiliates/current'
+            ],
+            [
+                'name' => 'Affiliate Requests',
+                'url' => 'admin/affiliates/pending'
+            ],
+        ]
+    ],
     'Site' => [
         'power' => 'edit_pages',
         'links' => [
