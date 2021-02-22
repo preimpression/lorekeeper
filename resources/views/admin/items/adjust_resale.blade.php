@@ -22,8 +22,9 @@
         </div>
         <div class="form-group mr-3 mb-3">
             {!! Form::label('sort', 'Sort: ', ['class' => 'mr-2']) !!}
-            {!! Form::select('sort', ['name_asc' => 'Alphabetically Ascending', 'name_desc' => 'Alphabetically Descending', 'value_desc' => 'Value Descending', 'value_asc' => 'Value Ascending', 'newest' => 'Newest First', 'oldest' => 'Oldest First',], Request::get('sort'), ['class' => 'form-control']) !!}
+            {!! Form::select('sort', ['name_asc' => 'Alphabetically Ascending', 'name_desc' => 'Alphabetically Descending', 'value_asc' => 'Value-less First', 'newest' => 'Newest First', 'oldest' => 'Oldest First',], Request::get('sort'), ['class' => 'form-control']) !!}
         </div>
+        <!-- If you are running MariaDB 10.1.x, remove "Value-less First" as an option. -->
         <div class="form-group mb-3">
             {!! Form::submit('Search', ['class' => 'btn btn-primary']) !!}
         </div>

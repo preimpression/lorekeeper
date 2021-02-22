@@ -310,11 +310,8 @@ class ItemController extends Controller
                 $query->orderBy('id', 'ASC');
                 break;
             case 'value_asc':
-                $query->orderBy('data->resell', 'DESC');
-                break;
-            case 'value_desc':
                 $query->orderBy('data->resell', 'ASC');
-                break;
+                break; // If you are running MariaDB version 10.1.x, remove or comment out this case.
         }
         return view('admin.items.adjust_resale', [
             'items' => $query->paginate(20)->appends($request->query()),
