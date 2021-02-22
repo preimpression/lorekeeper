@@ -277,6 +277,74 @@ class ItemController extends Controller
         return redirect()->to('admin/data/items');
     }
 
+    /**
+     * Shows the mass resale value adjustment page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getItemResaleAdjustment(Request $request)
+    {
+        $query = Item::query();
+        $data = $request->only(['item_category_id', 'name','sort']);
+
+        if(isset($data['item_category_id']) && $data['item_category_id'] != 'none' && $data['item_category_id'] != null)
+            $query->where('item_category_id', $data['item_category_id']);
+        if(isset($data['name']))
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
+        switch(isset($data['sort']) ? $data['sort'] : null) {
+            default:
+                $query->orderBy('name');
+                break;
+            case 'name_asc':
+                $query->orderBy('name');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'DESC');
+                break;
+            case 'newest':
+                $query->orderBy('id', 'DESC');
+                break;
+            case 'oldest':
+                $query->orderBy('id', 'ASC');
+                break;
+            case 'value_asc':
+                $query->orderBy('data->resell', 'DESC');
+                break;
+            case 'value_desc':
+                $query->orderBy('data->resell', 'ASC');
+                break;
+        }
+        return view('admin.items.adjust_resale', [
+            'items' => $query->paginate(20)->appends($request->query()),
+            'categories' => ['none' => 'Any Category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+            'userCurrencies' => Currency::where('is_user_owned', 1)->orderBy('sort_user', 'DESC')->pluck('name', 'id'),
+        ]);
+    }
+
+    /**
+     * Creates or edits an item.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ItemService  $service
+     * @param  int|null                  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postItemResaleAdjustment(Request $request, ItemService $service)
+    {
+        $data = $request->only([
+            'id', 'currency_quantity', 'currency_id'
+        ]);
+        if($service->updateItemValues($data, Auth::user())) {
+            flash('Item values updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
     /**********************************************************************************************
 
         ITEM TAGS

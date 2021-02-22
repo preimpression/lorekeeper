@@ -13,6 +13,9 @@
     @if(Auth::user()->hasPower('edit_inventories'))
         <a class="btn btn-primary" href="{{ url('admin/grants/item-search') }}"><i class="fas fa-search"></i> Item Search</a>
     @endif
+    @if(Config::get('lorekeeper.extensions.item_entry_expansion.resale_function'))
+        <a class="btn btn-primary" href="{{ url('admin/data/items/resale') }}"><i class="fas fa-dollar-sign"></i> Adjust Resale Values</a>
+    @endif
     <a class="btn btn-primary" href="{{ url('admin/data/item-categories') }}"><i class="fas fa-folder"></i> Item Categories</a>
     <a class="btn btn-primary" href="{{ url('admin/data/items/create') }}"><i class="fas fa-plus"></i> Create New Item</a>
 </div>

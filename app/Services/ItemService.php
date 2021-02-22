@@ -8,6 +8,7 @@ use Config;
 use App\Models\Item\ItemCategory;
 use App\Models\Item\Item;
 use App\Models\Item\ItemTag;
+use App\Models\Currency\Currency;
 
 class ItemService extends Service
 {
@@ -334,6 +335,41 @@ class ItemService extends Service
         }
         return $this->rollbackReturn(false);
     }
+
+
+
+    /**
+     * Deletes an item.
+     *
+     * @param  \App\Models\Item\Item  $item
+     * @return bool
+     */
+    public function updateItemValues($data, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+
+            foreach($data['id'] as $key => $id)
+            {
+                if(!isset($data['currency_quantity'][$key]) || !isset($data['currency_id'][$key])) continue;
+                else {
+                    $item = Item::find($id); if(!$item) throw new \Exception("Item does not exist.");
+                    if(!Currency::find($data['currency_id'][$key])) throw new \Exception("Invalid currency.");
+
+                    $this_data = $item->data;
+                    $this_data['resell'] = [$data['currency_id'][$key] => $data['currency_quantity'][$key]];
+                    $item->data = json_encode($this_data);
+                    $item->update();
+                }
+            }
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
 
     /**********************************************************************************************
 

@@ -142,6 +142,9 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::post('items/edit/{id?}', 'ItemController@postCreateEditItem');
     Route::post('items/delete/{id}', 'ItemController@postDeleteItem');
 
+    Route::get('items/resale', 'ItemController@getItemResaleAdjustment');
+    Route::post('items/resale', 'ItemController@postItemResaleAdjustment');
+
     Route::get('items/delete-tag/{id}/{tag}', 'ItemController@getDeleteItemTag');
     Route::post('items/delete-tag/{id}/{tag}', 'ItemController@postDeleteItemTag');
     Route::get('items/tag/{id}/{tag}', 'ItemController@getEditItemTag');
