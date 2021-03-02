@@ -15,7 +15,7 @@ class UserResearch extends Model
      * @var array
      */
     protected $fillable = [
-        'research_id', 'user_id'
+        'research_id', 'user_id', 'used_at', 'rewards_claimed'
     ];
 
     /**
@@ -32,8 +32,15 @@ class UserResearch extends Model
      */
     protected $table = 'user_research';
 
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    public $dates = ['used_at'];
+
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
@@ -41,7 +48,7 @@ class UserResearch extends Model
     /**
      * Get the user who owns the research.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User');
     }
@@ -49,17 +56,17 @@ class UserResearch extends Model
     /**
      * Get the research associated with this user.
      */
-    public function research() 
+    public function research()
     {
         return $this->belongsTo('App\Models\Research\Research');
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
-    
+
     /**
      * Checks if the stack is transferrable.
      *

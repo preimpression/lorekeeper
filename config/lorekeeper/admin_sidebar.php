@@ -125,6 +125,7 @@ return [
             ],
         ]
     ],
+
     'Data' => [
         'power' => 'edit_data',
         'links' => [
@@ -177,7 +178,8 @@ return [
                 'url' => 'admin/data/items'
             ],
         ]
-    ],    
+    ],
+
     'Research' => [
         'power' => 'manage_research',
         'links' => [
@@ -199,6 +201,7 @@ return [
             ],
         ]
     ],
+
     'Raffles' => [
         'power' => 'manage_raffles',
         'links' => [

@@ -22,7 +22,8 @@ class Research extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'summary', 'parsed_description', 'sort','icon_code', 'tree_id', 'parent_id', 'prerequisite_id', 'prereq_is_same', 'is_active', 'price'
+        'name', 'description', 'summary', 'parsed_description', 'sort','icon_code', 'tree_id',
+        'parent_id', 'prerequisite_id', 'prereq_is_same', 'is_active', 'price', 'data'
     ];
 
 
@@ -32,9 +33,9 @@ class Research extends Model
      * @var string
      */
     protected $table = 'researches';
-    
+
     public $timestamps = false;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -68,7 +69,7 @@ class Research extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
@@ -76,7 +77,7 @@ class Research extends Model
     /**
      * Get the research attached to this research.
      */
-    public function tree() 
+    public function tree()
     {
         return $this->belongsTo('App\Models\Research\Tree', 'tree_id');
     }
@@ -84,7 +85,7 @@ class Research extends Model
     /**
      * Get the research attached to this research.
      */
-    public function parent() 
+    public function parent()
     {
         return $this->belongsTo('App\Models\Research\Research', 'parent_id');
     }
@@ -92,7 +93,7 @@ class Research extends Model
     /**
      * Get the research attached to this research.
      */
-    public function children() 
+    public function children()
     {
         return $this->hasMany('App\Models\Research\Research', 'parent_id');
     }
@@ -100,7 +101,7 @@ class Research extends Model
     /**
      * Get the research attached to this research.
      */
-    public function prerequisite() 
+    public function prerequisite()
     {
         return $this->belongsTo('App\Models\Research\Research', 'prerequisite_id');
     }
@@ -108,15 +109,23 @@ class Research extends Model
     /**
      * Get the research attached to this research.
      */
-    public function subrequisites() 
+    public function subrequisites()
     {
         return $this->hasMany('App\Models\Research\Research', 'prerequisite_id');
     }
 
-    
+    /**
+     * Get the rewards attached to this research branch.
+     */
+    public function rewards()
+    {
+        return $this->hasMany('App\Models\Research\ResearchReward', 'research_id');
+    }
+
+
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -171,7 +180,7 @@ class Research extends Model
     {
         return public_path($this->imageDirectory);
     }
-    
+
     /**
      * Gets the URL of the model's image.
      *
@@ -192,15 +201,25 @@ class Research extends Model
     {
         return url('research/'.$this->id);
     }
-    
+
+    /**
+     * Gets the research branch's asset type for asset management.
+     *
+     * @return string
+     */
+    public function getAssetTypeAttribute()
+    {
+        return 'researches';
+    }
+
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
 
-    
+
 
     /**
      * Scope a query to sort items in category order.

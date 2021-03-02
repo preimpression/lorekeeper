@@ -9,6 +9,7 @@ use App\Models\Research\Tree;
 use App\Models\Research\Research;
 use App\Models\Currency\Currency;
 use App\Models\User\UserCurrency;
+use App\Models\User\UserResearch;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -30,12 +31,12 @@ class ResearchController extends Controller
     {
         $query = Research::with('tree');
         $data = $request->only(['tree_id', 'name', 'sort']);
-        if(isset($data['tree_id']) && $data['tree_id'] != 'none') 
+        if(isset($data['tree_id']) && $data['tree_id'] != 'none')
             $query->where('tree_id', $data['tree_id']);
-        if(isset($data['name'])) 
+        if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
-        if(isset($data['sort'])) 
+        if(isset($data['sort']))
         {
             switch($data['sort']) {
                 case 'alpha':
@@ -54,7 +55,7 @@ class ResearchController extends Controller
                     $query->sortOldest();
                     break;
             }
-        } 
+        }
         else $query->sortTree();
 
         return view('research.branches', [
@@ -63,7 +64,7 @@ class ResearchController extends Controller
             'researchTrees' => ['none' => 'Any Tree'] + Tree::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
         ]);
     }
-    
+
     /**
      * Shows a research.
      *
@@ -81,7 +82,6 @@ class ResearchController extends Controller
             $currency = UserCurrency::where('currency_id',$research->tree->currency_id)->where('user_id',$user->id)->get()->pluck('quantity')->first();
         }
         if(!isset($currency) || !$currency) $currency = 0;
-        
 
         return view('research.branch_page', [
             'research' => $research,
@@ -90,7 +90,7 @@ class ResearchController extends Controller
         ]);
     }
 
-    
+
     /**
      * ...
      *
@@ -116,7 +116,7 @@ class ResearchController extends Controller
 
 
     }
-    
+
     /**
      * ...
      *
@@ -136,7 +136,7 @@ class ResearchController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
-    
+
     }
 
 
@@ -151,6 +151,28 @@ class ResearchController extends Controller
             'logs' => Auth::user()->getResearchLogs(0),
             'trees' => Tree::orderBy('sort', 'DESC')->get(),
         ]);
+    }
+
+    /**
+     * ...
+     *
+     * @param  \Illuminate\Http\Request      $request
+     * @param  App\Services\CurrencyManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postClaimRewards($id, ResearchManager $service) {
+
+        $research = Research::find($id);
+        if(!$research) abort(404);
+
+        if($service->getRewards($research, Auth::user())) {
+            flash('Rewards claimed successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+
     }
 
 

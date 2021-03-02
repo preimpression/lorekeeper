@@ -2,6 +2,7 @@
 
 use App\Services\Service;
 
+use Arr;
 use DB;
 use Config;
 use Notifications;
@@ -10,6 +11,7 @@ use App\Models\User\User;
 use App\Models\User\UserResearch;
 use App\Models\Research\Tree;
 use App\Models\Research\Research;
+use App\Models\Research\ResearchReward;
 use App\Models\Research\ResearchLog;
 
 use App\Services\ResearchManager;
@@ -29,7 +31,7 @@ class ResearchService extends Service
     /**
      * Creates a new research tere.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Research\Tree
      */
@@ -57,17 +59,17 @@ class ResearchService extends Service
             }
 
             return $this->commitReturn($tree);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
-    
+
     /**
      * Updates a tree.
      *
      * @param  \App\Models\Tree\Tree  $tree
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Tree\Tree
      */
@@ -81,7 +83,7 @@ class ResearchService extends Service
 
             $data = $this->populateTreeData($data, $tree);
 
-            $image = null;            
+            $image = null;
             if(isset($data['image']) && $data['image']) {
                 $old = $tree->image_url;
                 $image = $data['image'];
@@ -97,14 +99,14 @@ class ResearchService extends Service
             $tree->update($data);
 
             return $this->commitReturn($tree);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
 
-    
+
     /**
      * Deletes a tree.
      *
@@ -117,11 +119,11 @@ class ResearchService extends Service
 
         try {
 
-            if($tree->has_image) $this->deleteImage($tree->treeImagePath, $tree->treeImageFileName); 
+            if($tree->has_image) $this->deleteImage($tree->treeImagePath, $tree->treeImageFileName);
             $tree->delete();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -146,7 +148,7 @@ class ResearchService extends Service
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -155,7 +157,7 @@ class ResearchService extends Service
     /**
      * Processes user input for creating/updating a tree.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\Tree\Tree  $tree
      * @return array
      */
@@ -165,17 +167,17 @@ class ResearchService extends Service
         $data['is_active'] = isset($data['is_active']);
 
         $data['summary'] = isset($data['summary']) ? $data['summary'] : null;
-        
+
         if(isset($data['remove_image']))
         {
-            if($tree && isset($tree->image_url) && $data['remove_image']) 
-            { 
-                $data['image_url'] = null; 
-                $this->deleteImage($tree->treeImagePath, $tree->treeImageFileName); 
+            if($tree && isset($tree->image_url) && $data['remove_image'])
+            {
+                $data['image_url'] = null;
+                $this->deleteImage($tree->treeImagePath, $tree->treeImageFileName);
             }
             unset($data['remove_image']);
         }
-        
+
         return $data;
     }
 
@@ -194,7 +196,7 @@ class ResearchService extends Service
     /**
      * Creates a new research branch.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Research\Tree
      */
@@ -209,18 +211,20 @@ class ResearchService extends Service
 
             $research = Research::create($data);
 
+            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $research);
+
             return $this->commitReturn($research);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
-    
+
     /**
      * Updates a tree.
      *
      * @param  \App\Models\Research\Research  $tree
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Research\Research
      */
@@ -238,11 +242,37 @@ class ResearchService extends Service
 
             if(!$this->updateChildrenOnTreeChange($research, $data['tree_id'])) throw new \Exception("Could not update children.");
 
+            $this->populateRewards(Arr::only($data, ['rewardable_type', 'rewardable_id', 'quantity']), $research);
+
             return $this->commitReturn($research);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
+    }
+
+    /**
+     * Processes user input for creating/updating research rewards.
+     *
+     * @param  array                            $data
+     * @param  \App\Models\Research\Research    $research
+     */
+    private function populateRewards($data, $research)
+    {
+        // Clear the old rewards...
+        $research->rewards()->delete();
+
+        if(isset($data['rewardable_type'])) {
+            foreach($data['rewardable_type'] as $key => $type)
+            {
+                ResearchReward::create([
+                    'research_id'       => $research->id,
+                    'rewardable_type' => $type,
+                    'rewardable_id'   => $data['rewardable_id'][$key],
+                    'quantity'        => $data['quantity'][$key],
+                ]);
+            }
+        }
     }
 
     /**
@@ -265,13 +295,13 @@ class ResearchService extends Service
             }
             else return true;
         }
-        catch(\Exception $e) { 
+        catch(\Exception $e) {
             return false;
         }
         return false;
     }
 
-    
+
     /**
      * Deletes a tree.
      *
@@ -288,7 +318,7 @@ class ResearchService extends Service
 
             $research->delete();
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -297,29 +327,34 @@ class ResearchService extends Service
     /**
      * Processes user input for creating/updating a research.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\Research\Research  $tree
      * @return array
      */
     private function populateResearchData($data, $research = null)
     {
+
         $saveData['name'] = $data['name'];
-        
+
         $saveData['summary'] = isset($data['summary']) ? $data['summary'] : null;
         $saveData['description'] = isset($data['description']) ? $data['description'] : null;
         if(isset($data['description']) && $data['description']) $saveData['parsed_description'] = parse($data['description']);
 
         $saveData['icon_code'] = isset($data['icon']) ? $data['icon'] : 'fas fa-sitemap';
-        
+
         $saveData['tree_id'] = $data['tree_id'];
 
         $saveData['parent_id'] = isset($data['parent_id']) && $data['parent_id'] ? $data['parent_id'] : null;
         $saveData['price'] = isset($data['price']) ? $data['price'] : 0;
-        
+
         if(isset($data['prereq_is_same']) && $data['prereq_is_same']) $saveData['prerequisite_id'] = $saveData['parent_id'];
         else $saveData['prerequisite_id'] = isset($data['prerequisite_id']) && $data['prerequisite_id'] ? $data['prerequisite_id'] : null;
-        
+
         $saveData['is_active'] = isset($data['is_active']);
+
+        $saveData['rewardable_type'] = isset($data['rewardable_type']) ? $data['rewardable_type'] : null;
+        $saveData['rewardable_id'] = isset($data['rewardable_id']) ? $data['rewardable_id'] : null;
+        $saveData['quantity'] = isset($data['quantity']) ? $data['quantity'] : null;
 
         return $saveData;
     }
@@ -338,7 +373,7 @@ class ResearchService extends Service
     public function grantResearch($data, $staff)
     {
         DB::beginTransaction();
-        
+
         //['users', 'research_ids', 'message']\
 
         try {
@@ -365,15 +400,15 @@ class ResearchService extends Service
                             'sender_url' => $staff->url,
                             'sender_name' => $staff->name
                         ]);
-                        
+
                         // Add a purchase log
                         $researchLog = ResearchLog::create([
-                            'tree_id' => $research->tree->id, 
-                            'research_id' => $research->id, 
-                            'data' => json_encode(['log_type' => 'Staff Grant', 'message' => isset($data['message']) ? $data['message'] : null]), 
-                            'recipient_id' => $user->id, 
-                            'sender_id' => $staff->id, 
-                            'currency_id' => $research->tree->currency->id, 
+                            'tree_id' => $research->tree->id,
+                            'research_id' => $research->id,
+                            'data' => json_encode(['log_type' => 'Staff Grant', 'message' => isset($data['message']) ? $data['message'] : null]),
+                            'recipient_id' => $user->id,
+                            'sender_id' => $staff->id,
+                            'currency_id' => $research->tree->currency->id,
                             'cost' => 0 ,
                         ]);
                     }
@@ -384,7 +419,7 @@ class ResearchService extends Service
                 }
             }
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);

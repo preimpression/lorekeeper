@@ -10,6 +10,11 @@ use App\Models\Research\ResearchLog;
 use App\Models\User\User;
 use App\Models\User\UserResearch;
 use App\Models\Currency\Currency;
+use App\Models\Item\Item;
+use App\Models\Item\ItemCategory;
+use App\Models\Loot\LootTable;
+use App\Models\Raffle\Raffle;
+
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -26,9 +31,9 @@ class ResearchController extends Controller
     {
         $query = Research::query();
         $data = $request->only(['tree_id', 'name']);
-        if(isset($data['tree_id']) && $data['tree_id'] != 'none') 
+        if(isset($data['tree_id']) && $data['tree_id'] != 'none')
             $query->where('tree_id', $data['tree_id']);
-        if(isset($data['name'])) 
+        if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
         return view('admin.research.index', [
             'researches' => $query->paginate(20)->appends($request->query()),
@@ -51,7 +56,7 @@ class ResearchController extends Controller
         ]);
     }
 
-    
+
     /**
      * Shows the create research page.
      *
@@ -59,16 +64,22 @@ class ResearchController extends Controller
      */
     public function getCreateResearch()
     {
-
+        $research = new Research;
         return view('admin.research.create_edit_branch', [
-            'research' => new Research,
+            'research' => $research,
             'trees' => Tree::orderBy('name')->pluck('name', 'id'),
             'researchTrees' => Tree::get(),
             'branches' => Research::orderBy('name')->pluck('name', 'id')->toArray(),
             'prereq_branches' => ['0' => 'Pick a Tree First'],
+            'rewardsData' => isset($research->data['rewards']) ? parseAssetData($research->data['rewards']) : null,
+            'itemsrow' => Item::all()->keyBy('id'),
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
-    
+
     /**
      * Shows the edit research page.
      *
@@ -86,6 +97,12 @@ class ResearchController extends Controller
             'researchTrees' => Tree::get(),
             'branches' => Research::orderBy('name')->where('id', '!=', $research->id)->pluck('name', 'id')->toArray(),
             'prereq_branches' => Research::orderBy('name')->where('id', '!=', $research->id)->where('tree_id', $research->tree_id)->pluck('name', 'id')->toArray(),
+            'rewardsData' => isset($research->data['rewards']) ? parseAssetData($research->data['rewards']) : null,
+            'itemsrow' => Item::all()->keyBy('id'),
+            'items' => Item::orderBy('name')->pluck('name', 'id'),
+            'currencies' => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
+            'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -120,7 +137,8 @@ class ResearchController extends Controller
         $id ? $request->validate(Research::$updateRules) : $request->validate(Research::$createRules);
 
         $data = $request->only([
-            'name', 'description', 'icon', 'tree_id', 'parent_id', 'prerequisite_id', 'prereq_is_same', 'is_active', 'summary', 'price'
+            'name', 'description', 'icon', 'tree_id', 'parent_id', 'prerequisite_id', 'prereq_is_same', 'is_active', 'summary', 'price',
+            'rewardable_type', 'rewardable_id', 'quantity',
         ]);
 
         if($id && $service->updateResearch(Research::find($id), $data, Auth::user())) {

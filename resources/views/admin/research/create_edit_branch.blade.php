@@ -74,17 +74,27 @@
     {!! Form::textarea('description', $research->description, ['class' => 'form-control wysiwyg']) !!}
 </div>
 
+<div class="float-left">
+    <h3>Rewards</h3>
+    <p>These rewards will be claimable after purchase. This allows for rewards to be claimed by users who purchased this research in the past.</p>
+</div>
+@include('widgets._loot_select', ['loots' => $research->rewards, 'showLootTables' => true, 'showRaffles' => true])
 
-<div class="form-group">
+
+
+<div class="form-group float-left">
     {!! Form::checkbox('is_active', 1, $research->id ? $research->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
     {!! Form::label('is_active', 'Set Active', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the research will not be visible to regular users.') !!}
 </div>
 
 <div class="text-right">
-    {!! Form::submit($research->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit($research->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary px-5']) !!}
 </div>
 
 {!! Form::close() !!}
+
+@include('widgets._loot_select_row', ['items' => $items, 'currencies' => $currencies, 'tables' => $tables, 'raffles' => $raffles, 'showLootTables' => true, 'showRaffles' => true])
+
 
 @endif
 
@@ -92,13 +102,13 @@
 
 @section('scripts')
 @parent
+@include('js._loot_js', ['showLootTables' => true, 'showRaffles' => true])
 <script>
 $( document ).ready(function() {
     $('.delete-research-button').on('click', function(e) {
         e.preventDefault();
         loadModal("{{ url('admin/data/research/delete') }}/{{ $research->id }}", 'Delete Research Branch');
     });
-    $('.selectize').selectize();
 
     $("#iconic").change(function(){
              var text = $('#iconic').val();
@@ -118,6 +128,6 @@ $( document ).ready(function() {
 
 
 });
-    
+
 </script>
 @endsection

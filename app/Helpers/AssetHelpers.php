@@ -26,10 +26,10 @@ function calculateGroupCurrency($data)
 
     // You'll need the names of the form fields you specified both in the form config and above.
     // You can get a particular field's value with $data['form_name'], for instance, $data['art_finish']
-    
+
     // This differentiates how values are calculated depending on the type of content being submitted.
     $pieceType = collect($data['piece_type'])->flip();
-    
+
     // For instance, if the user selected that the submission has a visual art component,
     // these actions will be performed:
     if($pieceType->has('art')) {
@@ -37,7 +37,7 @@ function calculateGroupCurrency($data)
         $total += ($data['art_finish'] + $data['art_type']);
         // This multiplies each option selected in the "bonus" form field by
         // the result from the "art type" field, and adds it to the total.
-        if(isset($data['art_bonus'])) foreach($data['art_bonus'] as $bonus) $total += (round($bonus) * $data['art_type']);        
+        if(isset($data['art_bonus'])) foreach($data['art_bonus'] as $bonus) $total += (round($bonus) * $data['art_type']);
     }
 
     // Likewise for if the user selected that the submission has a written component:
@@ -60,7 +60,7 @@ function calculateGroupCurrency($data)
 
 /**
  * Gets the asset keys for an array depending on whether the
- * assets being managed are owned by a user or character. 
+ * assets being managed are owned by a user or character.
  *
  * @param  bool  $isCharacter
  * @return array
@@ -73,7 +73,7 @@ function getAssetKeys($isCharacter = false)
 
 /**
  * Gets the model name for an asset type.
- * The asset type has to correspond to one of the asset keys above. 
+ * The asset type has to correspond to one of the asset keys above.
  *
  * @param  string  $type
  * @param  bool    $namespaced
@@ -87,12 +87,12 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\Item\Item';
             else return 'Item';
             break;
-        
+
         case 'currencies':
             if($namespaced) return '\App\Models\Currency\Currency';
             else return 'Currency';
             break;
-            
+
         case 'raffle_tickets':
             if($namespaced) return '\App\Models\Raffle\Raffle';
             else return 'Raffle';
@@ -102,12 +102,12 @@ function getAssetModelString($type, $namespaced = true)
             if($namespaced) return '\App\Models\Loot\LootTable';
             else return 'LootTable';
             break;
-            
+
         case 'user_items':
             if($namespaced) return '\App\Models\User\UserItem';
             else return 'UserItem';
             break;
-            
+
         case 'characters':
             if($namespaced) return '\App\Models\Character\Character';
             else return 'Character';
