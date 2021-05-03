@@ -63,9 +63,9 @@ class AccountController extends Controller
             'locations' => Location::all()->where('is_user_home')->pluck('style','id')->toArray(),
             'factions' => Faction::all()->where('is_user_faction')->pluck('style','id')->toArray(),
             'user_enabled' => Settings::get('WE_user_locations'),
-            'user_faction_enabled' => Settings::get('WE_user_locations'),
+            'user_faction_enabled' => Settings::get('WE_user_factions'),
             'char_enabled' => Settings::get('WE_character_locations'),
-            'char_faction_enabled' => Settings::get('WE_character_locations'),
+            'char_faction_enabled' => Settings::get('WE_character_factions'),
             'location_interval' => $interval[Settings::get('WE_change_timelimit')]
         ]);
     }
