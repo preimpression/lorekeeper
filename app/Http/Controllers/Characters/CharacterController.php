@@ -15,6 +15,7 @@ use App\Models\Rarity;
 use App\Models\WorldExpansion\Location;
 use App\Models\WorldExpansion\Faction;
 use App\Models\Feature\Feature;
+use App\Models\Character\CharacterProfile;
 
 use App\Models\Currency\Currency;
 use App\Models\Currency\CurrencyLog;
@@ -133,7 +134,9 @@ class CharacterController extends Controller
         $isOwner = ($this->character->user_id == Auth::user()->id);
         if(!$isMod && !$isOwner) abort(404);
 
-        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'alert_user','location', 'faction']), $this->character, Auth::user(), !$isOwner)) {
+        $request->validate(CharacterProfile::$rules);
+
+        if($service->updateCharacterProfile($request->only(['name', 'link', 'text', 'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'alert_user', 'location', 'faction']), $this->character, Auth::user(), !$isOwner)) {
             flash('Profile edited successfully.')->success();
         }
         else {
