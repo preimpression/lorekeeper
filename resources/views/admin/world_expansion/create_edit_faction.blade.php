@@ -139,7 +139,7 @@
                                 </div>
                                 <div class="{{ !$rank->is_open ? 'show' : 'hide' }} closeOptions">
                                     <div class="form-group">
-                                        {!! Form::label('Available Positions') !!} {!! add_help('The number of positions of this rank available.') !!}
+                                        {!! Form::label('Available Positions') !!} {!! add_help('The number of positions of this rank available. Please note that reducing this will remove any existing members over the new number from their position.') !!}
                                         {!! Form::number('rank_amount[]', $rank->amount, ['class' => 'form-control', 'placeholder' => 'Enter an Amount']) !!}
                                     </div>
                                 </div>

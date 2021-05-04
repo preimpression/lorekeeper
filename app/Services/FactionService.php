@@ -387,20 +387,22 @@ class FactionService extends Service
                                 }
 
                                 // Add members
-                                $rankMembers[$rankKey] = FactionRankMember::create([
+                                $rankMembers[$rankKey][] = FactionRankMember::create([
                                     'faction_id' => $faction->id,
                                     'rank_id' => $ranks[$key]->id,
                                     'member_type' => $memberType,
                                     'member_id' => $memberId
                                 ]);
                             }
+
+                            if(count($rankMembers[$rankKey]) == $ranks[$key]->amount) break;
                         }
                     }
                 }
 
                 foreach($ranks as $rank) if(FactionRank::where('faction_id', $faction->id)->where('is_open', 1)->where('breakpoint', $rank->breakpoint)->where('id', '!=', $rank->id)->exists()) throw new \Exception("Rank breakpoints must be unique within the same faction.");
 
-                if(isset($rankMembers)) foreach($rankMembers as $member) if(FactionRankMember::where('member_type', $member->member_type)->where('member_id', $member->member_id)->where('id', '!=', $member->id)->exists()) throw new \Exception("Can't add the same member to two different positions!");
+                if(isset($rankMembers[$rankKey])) foreach($rankMembers[$rankKey] as $member) if(FactionRankMember::where('member_type', $member->member_type)->where('member_id', $member->member_id)->where('id', '!=', $member->id)->exists()) throw new \Exception("Can't add the same member to two different positions!");
             }
 
             $data = $this->populateFactionData($data, $faction);
