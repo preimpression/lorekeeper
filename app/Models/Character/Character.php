@@ -29,6 +29,9 @@ use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\WorldExpansion\FactionRank;
+use App\Models\WorldExpansion\FactionRankMember;
+
 class Character extends Model
 {
     use SoftDeletes;
@@ -430,6 +433,20 @@ class Character extends Model
 
             default:
                 return null;
+        }
+    }
+
+    /**
+     * Get character's faction rank.
+     */
+    public function getFactionRankAttribute()
+    {
+        if(!isset($this->faction_id) || !$this->faction->ranks()->count()) return null;
+        if(FactionRankMember::where('member_type', 'character')->where('member_id', $this->id)->first()) return FactionRankMember::where('member_type', 'character')->where('member_id', $this->id)->first()->rank;
+        if($this->faction->ranks()->where('is_open', 1)->count()) {
+            $standing = $this->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+            if(!$standing) return $this->faction->ranks()->where('is_open', 1)->where('breakpoint', 0)->first();
+            return $this->faction->ranks()->where('is_open', 1)->where('breakpoint', '<=', $standing->quantity)->orderBy('breakpoint', 'DESC')->first();
         }
     }
 

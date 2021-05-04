@@ -61,6 +61,7 @@
         <div class="alert alert-warning">Your characters will have the same faction as you.</div>
     @endif
     @if(Auth::user()->canChangeFaction)
+        <p>Please note that changing your faction will remove you from any special ranks and reset your faction standing!</p>
         {!! Form::open(['url' => 'account/faction']) !!}
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Faction</label>

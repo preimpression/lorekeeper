@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\User\User;
 use App\Models\WorldExpansion\FigureCategory;
+use App\Models\WorldExpansion\FactionRankMember;
 use App\Models\Item\Item;
 
 class Figure extends Model
@@ -229,15 +230,11 @@ class Figure extends Model
         return url('world/figures/'.$this->id);
     }
 
-
-
     /**********************************************************************************************
 
         SCOPES
 
     **********************************************************************************************/
-
-
 
     /**
      * Scope a query to sort items in category order.
@@ -284,6 +281,19 @@ class Figure extends Model
         return $query->orderBy('id');
     }
 
+    /**********************************************************************************************
 
+        ACCESSORS
+
+    **********************************************************************************************/
+
+    /**
+     * Get character's faction rank.
+     */
+    public function getFactionRankAttribute()
+    {
+        if(!isset($this->faction_id) || !$this->faction->ranks()->count()) return null;
+        if(FactionRankMember::where('member_type', 'figure')->where('member_id', $this->id)->first()) return FactionRankMember::where('member_type', 'figure')->where('member_id', $this->id)->first()->rank;
+    }
 
 }

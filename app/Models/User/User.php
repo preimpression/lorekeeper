@@ -25,6 +25,8 @@ use App\Models\Character\CharacterBookmark;
 use App\Models\Gallery\GallerySubmission;
 use App\Models\Gallery\GalleryCollaborator;
 use App\Models\Gallery\GalleryFavorite;
+use App\Models\WorldExpansion\FactionRank;
+use App\Models\WorldExpansion\FactionRankMember;
 use App\Traits\Commenter;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -438,6 +440,16 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Check if user is of age
+     */
+    public function getcheckBirthdayAttribute()
+    {
+        $bday = $this->birthday;
+        if($bday->diffInYears(carbon::now()) < 13) return false;
+        else return true;
+    }
+
+    /**
      * Checks if the user can change faction.
      *
      * @return string
@@ -485,13 +497,17 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Check if user is of age
+     * Get user's faction rank.
      */
-    public function getcheckBirthdayAttribute()
+    public function getFactionRankAttribute()
     {
-        $bday = $this->birthday;
-        if($bday->diffInYears(carbon::now()) < 13) return false;
-        else return true;
+        if(!isset($this->faction_id) || !$this->faction->ranks()->count()) return null;
+        if(FactionRankMember::where('member_type', 'user')->where('member_id', $this->id)->first()) return FactionRankMember::where('member_type', 'user')->where('member_id', $this->id)->first()->rank;
+        if($this->faction->ranks()->where('is_open', 1)->count()) {
+            $standing = $this->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+            if(!$standing) return $this->faction->ranks()->where('is_open', 1)->where('breakpoint', 0)->first();
+            return $this->faction->ranks()->where('is_open', 1)->where('breakpoint', '<=', $standing->quantity)->orderBy('breakpoint', 'DESC')->first();
+        }
     }
 
     /**********************************************************************************************

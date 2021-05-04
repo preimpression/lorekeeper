@@ -50,7 +50,7 @@
                 @if($image->character->factionSetting)
                     <div class="row">
                         <div class="col-lg-4 col-md-6 col-4"><h5>Faction</h5></div>
-                        <div class="col-lg-8 col-md-6 col-8">{!! $image->character->faction ? $image->character->currentFaction : 'None' !!}</div>
+                        <div class="col-lg-8 col-md-6 col-8">{!! $image->character->faction ? $image->character->currentFaction : 'None' !!}{!! $character->factionRank ? ' ('.$character->factionRank->name.')' : null !!}</div>
                     </div>
                 @endif
                 <div class="row">

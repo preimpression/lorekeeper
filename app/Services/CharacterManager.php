@@ -31,6 +31,7 @@ use App\Models\Species\Subtype;
 use App\Models\Rarity;
 use App\Models\Currency\Currency;
 use App\Models\Feature\Feature;
+use App\Models\WorldExpansion\FactionRankMember;
 
 class CharacterManager extends Service
 {
@@ -1279,11 +1280,25 @@ class CharacterManager extends Service
             if(!$character->is_myo_slot) $character->name = $data['name'];
             $character->save();
 
-            // Update the character's location and/or faction
-            if(isset($data['location']) && $data['location']) $character->home_id = $data['location'];
             // Update the character's location
-            if(isset($data['faction']) && $data['faction']) $character->faction_id = $data['faction'];
-            $character->save();
+            if(isset($data['location']) && $data['location']) $character->home_id = $data['location'];
+
+            // Update the character's faction
+            if(isset($data['faction']) && $data['faction']) {
+                if($character->faction_id) $old = $character->faction_id;
+
+                $character->faction_id = $data['faction'];
+                $character->save();
+
+                // Reset standing/remove from closed rank
+                if(isset($old) && $character->faction_id != $old) {
+                    $standing = $character->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+                    if($standing && $standing->quantity > 0) if(!$debit = (new CurrencyManager)->debitCurrency($character, null, 'Changed Factions', null, $standing, $standing->quantity))
+                        throw new \Exception('Failed to reset standing.');
+
+                    if(FactionRankMember::where('member_type', 'character')->where('member_id', $character->id)->first()) FactionRankMember::where('member_type', 'character')->where('member_id', $character->id)->first()->delete();
+                }
+            }
 
             if(!$character->is_myo_slot && Config::get('lorekeeper.extensions.character_TH_profile_link')) $character->profile->link = $data['link'];
             $character->profile->save();

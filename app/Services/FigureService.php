@@ -19,6 +19,8 @@ use App\Models\WorldExpansion\Figure;
 use App\Models\WorldExpansion\FigureItem;
 use App\Models\WorldExpansion\FigureCategory;
 
+use App\Models\WorldExpansion\FactionRankMember;
+
 class FigureService extends Service
 {
     /*
@@ -348,6 +350,13 @@ class FigureService extends Service
                 $figure->thumb_extension = $image_th->getClientOriginalExtension();
                 $figure->update();
                 $this->handleImage($image_th, $figure->imagePath, $figure->thumbFileName, $old_th);
+            }
+
+            // Remove from closed faction rank if applicable
+            if(isset($data['faction_id']) && $data['faction_id']) {
+                if($figure->faction_id && $figure->faction_id != $data['faction_id']){
+                    if(FactionRankMember::where('member_type', 'figure')->where('member_id', $figure->id)->first()){
+                        FactionRankMember::where('member_type', 'figure')->where('member_id', $figure->id)->first()->delete();}}
             }
 
             $figure->update($data);

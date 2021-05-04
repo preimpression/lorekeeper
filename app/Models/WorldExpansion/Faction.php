@@ -79,7 +79,7 @@ class Faction extends Model
     }
 
     /**
-     * Get parents of this event.
+     * Get parents of this faction.
      */
     public function parent()
     {
@@ -87,7 +87,7 @@ class Faction extends Model
     }
 
     /**
-     * Get children of this event.
+     * Get children of this faction.
      */
     public function children()
     {
@@ -126,6 +126,13 @@ class Faction extends Model
         return $this->hasMany('App\Models\WorldExpansion\Figure', 'faction_id');
     }
 
+    /**
+     * Get the ranks associated with this faction.
+     */
+    public function ranks()
+    {
+        return $this->hasMany('App\Models\WorldExpansion\FactionRank', 'faction_id');
+    }
 
     /**********************************************************************************************
 
