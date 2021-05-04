@@ -153,26 +153,26 @@
                                         <div class="col-md">
                                             <div class="form-group mb-2">
                                                 {!! Form::label('Member Type') !!} {!! add_help('Only members of this faction may be selected.') !!}
-                                                {!! Form::select('rank_member_type[][]', ['figure' => 'Figure'] + (Settings::get('WE_user_factions') > 0 ? ['user' => 'User'] : []) + (Settings::get('WE_character_factions') > 0 ? ['character' => 'Character'] : []), $member->member_type, ['class' => 'form-control rank-member-type', 'placeholder' => 'Choose a Type']) !!}
+                                                {!! Form::select('rank_member_type['.$rank->id.'][]', ['figure' => 'Figure'] + (Settings::get('WE_user_factions') > 0 ? ['user' => 'User'] : []) + (Settings::get('WE_character_factions') > 0 ? ['character' => 'Character'] : []), $member->member_type, ['class' => 'form-control rank-member-type', 'placeholder' => 'Choose a Type']) !!}
                                             </div>
                                         </div>
                                         <div class="rankMemberSetting col-md-8 mt-auto">
                                             <div class="{{ $member->member_type == 'figure' ? 'show' : 'hide' }} figureOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Figure') !!}
-                                                    {!! Form::select('rank_figure_id[][]', $figures, $member->member_type == 'figure' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
+                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figures, $member->member_type == 'figure' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
                                                 </div>
                                             </div>
                                             <div class="{{ $member->member_type == 'user' ? 'show' : 'hide' }} userOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('User') !!}
-                                                    {!! Form::select('rank_user_id[][]', $users, $member->member_type == 'user' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select User']) !!}
+                                                    {!! Form::select('rank_user_id['.$rank->id.'][]', $users, $member->member_type == 'user' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select User']) !!}
                                                 </div>
                                             </div>
                                             <div class="{{ $member->member_type == 'character' ? 'show' : 'hide' }} characterOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Character') !!}
-                                                    {!! Form::select('rank_character_id[][]', $characters, $member->member_type == 'character' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Character']) !!}
+                                                    {!! Form::select('rank_character_id['.$rank->id.'][]', $characters, $member->member_type == 'character' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Character']) !!}
                                                 </div>
                                             </div>
                                         </div>
@@ -185,7 +185,7 @@
                                         <div class="col-md">
                                             <div class="form-group mb-2">
                                                 {!! Form::label('Member Type') !!} {!! add_help('Only members of this faction may be selected.') !!}
-                                                {!! Form::select('rank_member_type[][]', ['figure' => 'Figure'] + (Settings::get('WE_user_factions') > 0 ? ['user' => 'User'] : []) + (Settings::get('WE_character_factions') > 0 ? ['character' => 'Character'] : []), null, ['class' => 'form-control rank-member-type', 'placeholder' => 'Choose a Type']) !!}
+                                                {!! Form::select('rank_member_type['.$rank->id.'][]', ['figure' => 'Figure'] + (Settings::get('WE_user_factions') > 0 ? ['user' => 'User'] : []) + (Settings::get('WE_character_factions') > 0 ? ['character' => 'Character'] : []), null, ['class' => 'form-control rank-member-type', 'placeholder' => 'Choose a Type']) !!}
                                             </div>
                                         </div>
                                         <div class="rankMemberSetting col-md-8 mt-auto">
@@ -195,19 +195,19 @@
                                             <div class="hide figureOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Figure') !!}
-                                                    {!! Form::select('rank_figure_id[][]', $figures, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
+                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figures, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
                                                 </div>
                                             </div>
                                             <div class="hide userOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('User') !!}
-                                                    {!! Form::select('rank_user_id[][]', $users, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select User']) !!}
+                                                    {!! Form::select('rank_user_id['.$rank->id.'][]', $users, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select User']) !!}
                                                 </div>
                                             </div>
                                             <div class="hide characterOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Character') !!}
-                                                    {!! Form::select('rank_character_id[][]', $characters, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Character']) !!}
+                                                    {!! Form::select('rank_character_id['.$rank->id.'][]', $characters, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Character']) !!}
                                                 </div>
                                             </div>
                                         </div>

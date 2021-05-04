@@ -343,6 +343,7 @@ class FactionService extends Service
             if(isset($data['rank_name'])) {
                 // Delete old rank members, then ranks
                 foreach($faction->ranks as $rank) $rank->members()->delete();
+                $oldRanks = $faction->ranks()->pluck('id')->toArray();
                 $faction->ranks()->delete();
 
                 foreach($data['rank_name'] as $key=>$rankName) {
@@ -361,30 +362,32 @@ class FactionService extends Service
                         'amount' => $data['rank_is_open'][$key] ? null : $data['rank_amount'][$key]
                     ]);
 
+                    $rankKey = $oldRanks[$key];
+
                     // Add members if set
-                    if(isset($data['rank_member_type'][$key])) {
-                        foreach($data['rank_member_type'][$key] as $memberKey=>$memberType) {
+                    if(isset($data['rank_member_type'][$rankKey])) {
+                        foreach($data['rank_member_type'][$rankKey] as $memberKey=>$memberType) {
                             // Validate input
-                            if($memberType == 'figure' && !isset($data['rank_figure_id'][$key][$memberKey])) throw new \Exception('Please select a member figure.');
-                            elseif($memberType == 'user' && !isset($data['rank_user_id'][$key][$memberKey])) throw new \Exception('Please select a member user.');
-                            elseif($memberType == 'character' && !isset($data['rank_character_id'][$key][$memberKey])) throw new \Exception('Please select a member character.');
+                            if($memberType == 'figure' && !isset($data['rank_figure_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member figure.');
+                            elseif($memberType == 'user' && !isset($data['rank_user_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member user.');
+                            elseif($memberType == 'character' && !isset($data['rank_character_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member character.');
 
                             if($memberType) {
                                 if($memberType == 'figure') {
-                                    $memberId = $data['rank_figure_id'][$key][$memberKey];
+                                    $memberId = $data['rank_figure_id'][$rankKey][$memberKey];
                                     if(Figure::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected figures are not part of this faction.');
                                 }
                                 elseif($memberType == 'user') {
-                                    $memberId = $data['rank_user_id'][$key][$memberKey];
+                                    $memberId = $data['rank_user_id'][$rankKey][$memberKey];
                                     if(User::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected users are not part of this faction.');
                                 }
                                 elseif($memberType == 'character') {
-                                    $memberId = $data['rank_character_id'][$key][$memberKey];
+                                    $memberId = $data['rank_character_id'][$rankKey][$memberKey];
                                     if(Character::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected characters are not part of this faction.');
                                 }
 
                                 // Add members
-                                $rankMembers[$key] = FactionRankMember::create([
+                                $rankMembers[$rankKey] = FactionRankMember::create([
                                     'faction_id' => $faction->id,
                                     'rank_id' => $ranks[$key]->id,
                                     'member_type' => $memberType,
