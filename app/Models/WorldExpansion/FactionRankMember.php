@@ -35,7 +35,7 @@ class FactionRankMember extends Model
     **********************************************************************************************/
 
     /**
-     * Get faction this member belongs to.
+     * Get the faction this member belongs to.
      */
     public function faction()
     {
@@ -43,16 +43,60 @@ class FactionRankMember extends Model
     }
 
     /**
-     * Get rank this member belongs to.
+     * Get the rank this member belongs to.
      */
     public function rank()
     {
         return $this->belongsTo('App\Models\WorldExpansion\FactionRank', 'rank_id');
     }
 
+    /**
+     * Get the associated figure.
+     */
+    public function figure()
+    {
+        return $this->belongsTo('App\Models\WorldExpansion\Figure', 'member_id');
+    }
+
+    /**
+     * Get the associated user.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User\User', 'member_id');
+    }
+
+    /**
+     * Get the associated character.
+     */
+    public function character()
+    {
+        return $this->belongsTo('App\Models\Character\Character', 'member_id');
+    }
+
     /**********************************************************************************************
 
         ACCESSORS
     **********************************************************************************************/
+
+    /**
+     * Gets the member object depending on member type.
+     *
+     * @return \App\Models\WorldExpansion\Figure|\App\Models\User\User|\App\Models\Character\Character
+     */
+    public function getMemberObjectAttribute()
+    {
+        switch($this->member_type) {
+            case 'figure':
+                return $this->figure;
+                break;
+            case 'user':
+                return $this->user;
+                break;
+            case 'character':
+                return $this->character;
+                break;
+        }
+    }
 
 }
