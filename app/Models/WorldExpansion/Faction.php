@@ -2,6 +2,7 @@
 
 namespace App\Models\WorldExpansion;
 
+use Settings;
 use Config;
 use DB;
 
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\User\User;
+use App\Models\Character\Character;
 use App\Models\WorldExpansion\FactionType;
 
 class Faction extends Model
@@ -79,7 +81,7 @@ class Faction extends Model
     }
 
     /**
-     * Get parents of this event.
+     * Get parents of this faction.
      */
     public function parent()
     {
@@ -87,7 +89,7 @@ class Faction extends Model
     }
 
     /**
-     * Get children of this event.
+     * Get children of this faction.
      */
     public function children()
     {
@@ -126,6 +128,64 @@ class Faction extends Model
         return $this->hasMany('App\Models\WorldExpansion\Figure', 'faction_id');
     }
 
+    /**
+     * Get the ranks associated with this faction.
+     */
+    public function ranks()
+    {
+        return $this->hasMany('App\Models\WorldExpansion\FactionRank', 'faction_id');
+    }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to sort items in category order.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortFactionType($query)
+    {
+        $ids = LocationType::orderBy('sort', 'DESC')->pluck('id')->toArray();
+        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(type_id, '.implode(',', $ids).')')) : $query;
+    }
+    /**
+     * Scope a query to sort items in alphabetical order.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  bool                                   $reverse
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortAlphabetical($query, $reverse = false)
+    {
+        return $query->orderBy('name', $reverse ? 'DESC' : 'ASC');
+    }
+
+    /**
+     * Scope a query to sort items by newest first.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortNewest($query)
+    {
+        return $query->orderBy('id', 'DESC');
+    }
+
+    /**
+     * Scope a query to sort features oldest first.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSortOldest($query)
+    {
+        return $query->orderBy('id');
+    }
 
     /**********************************************************************************************
 
@@ -265,56 +325,23 @@ class Faction extends Model
         return $this->displayStyles[$this->display_style];
     }
 
-
-    /**********************************************************************************************
-
-        SCOPES
-
-    **********************************************************************************************/
-
     /**
-     * Scope a query to sort items in category order.
+     * Gets the list of member users and/or characters.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function scopeSortFactionType($query)
+    public function getFactionMembersAttribute()
     {
-        $ids = LocationType::orderBy('sort', 'DESC')->pluck('id')->toArray();
-        return count($ids) ? $query->orderByRaw(DB::raw('FIELD(type_id, '.implode(',', $ids).')')) : $query;
-    }
-    /**
-     * Scope a query to sort items in alphabetical order.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @param  bool                                   $reverse
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortAlphabetical($query, $reverse = false)
-    {
-        return $query->orderBy('name', $reverse ? 'DESC' : 'ASC');
-    }
+        $figures = $this->members()->get();
+        $users = Settings::get('WE_user_factions') > 0 && $this->is_user_faction ? User::visible()->where('faction_id', $this->id)->get() : null;
+        $characters = Settings::get('WE_character_factions') > 0 && $this->is_character_faction ? Character::visible()->where('faction_id', $this->id)->get() : null;
 
-    /**
-     * Scope a query to sort items by newest first.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortNewest($query)
-    {
-        return $query->orderBy('id', 'DESC');
-    }
-
-    /**
-     * Scope a query to sort features oldest first.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function scopeSortOldest($query)
-    {
-        return $query->orderBy('id');
+        if($users && $characters) return $users->concat($characters);
+        elseif($users || $characters) {
+            if(!$users) return $characters;
+            elseif(!$characters) return $users;
+        }
+        else return null;
     }
 
 }

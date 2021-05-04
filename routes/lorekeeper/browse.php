@@ -206,6 +206,7 @@ Route::group(['prefix' => 'world', 'namespace' => 'WorldExpansion'], function() 
     Route::get('factions/{id}', 'FactionController@getFaction');
     Route::get('faction-types', 'FactionController@getFactionTypes');
     Route::get('faction-types/{id}', 'FactionController@getFactionType');
+    Route::get('factions/{id}/members', 'FactionController@getFactionMembers');
 
     Route::get('concepts', 'ConceptController@getConcepts');
     Route::get('concepts/{id}', 'ConceptController@getConcept');

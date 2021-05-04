@@ -63,9 +63,9 @@ class AccountController extends Controller
             'locations' => Location::all()->where('is_user_home')->pluck('style','id')->toArray(),
             'factions' => Faction::all()->where('is_user_faction')->pluck('style','id')->toArray(),
             'user_enabled' => Settings::get('WE_user_locations'),
-            'user_faction_enabled' => Settings::get('WE_user_locations'),
+            'user_faction_enabled' => Settings::get('WE_user_factions'),
             'char_enabled' => Settings::get('WE_character_locations'),
-            'char_faction_enabled' => Settings::get('WE_character_locations'),
+            'char_faction_enabled' => Settings::get('WE_character_factions'),
             'location_interval' => $interval[Settings::get('WE_change_timelimit')]
         ]);
     }
@@ -174,6 +174,24 @@ class AccountController extends Controller
         ]);
         if($service->updateEmail($request->only(['email']), Auth::user())) {
             flash('Email updated successfully. A verification email has been sent to your new email address.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Changes user birthday setting
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\UserService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postBirthday(Request $request, UserService $service)
+    {
+        if($service->updateDOB($request->input('birthday_setting'), Auth::user())) {
+            flash('Setting updated successfully.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();

@@ -44,7 +44,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('Faction (Optional)') !!} {!! add_help('This will set the figure as a member of this faction. To associate this figure with a faction without being a part of it, edit the faction instead.') !!}
+    {!! Form::label('Faction (Optional)') !!} {!! add_help('This will set the figure as a member of this faction. To associate this figure with a faction without being a part of it, edit the faction instead. Changing this will remove this figure from any special ranks in their existing faction.') !!}
     {!! Form::select('faction_id', [0 => 'Choose a Faction'] + $factions, $figure->faction_id, ['class' => 'form-control selectize', 'id' => 'category']) !!}
 </div>
 

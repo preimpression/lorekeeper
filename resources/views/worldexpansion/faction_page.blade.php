@@ -167,6 +167,43 @@
     </div></div>
     @endif
 
+    @if($faction->ranks()->count())
+    <div class="w-100"></div>
+    <div class="text-center col-md-12"><div class="card h-100 py-3">
+     <h5 class="mb-0">Faction Ranks</h5>
+
+    <hr/>
+    <div class="row">
+        @if($faction->ranks()->where('is_open', 0)->count())
+            <div class="col-md">
+                <h4><small>Leadership</small></h4>
+                @foreach($faction->ranks()->where('is_open', 0)->orderBy('sort')->get() as $rank)
+                    <h6>{{ $rank->name }}{{ $rank->description ? ': '.$rank->description : '' }}</h6>
+                    @if($rank->members()->count())
+                        <p>
+                            @foreach($rank->members as $member)
+                                {!! $member->memberObject->displayName !!}{{ !$loop->last ? ',' : '' }}
+                            @endforeach
+                        </p>
+                    @endif
+                @endforeach
+            </div>
+        @endif
+        @if($faction->ranks()->where('is_open', 1)->count())
+            <div class="col-md">
+                <h4><small>Member Ranks</small></h4>
+                @foreach($faction->ranks()->where('is_open', 1)->orderBy('sort')->get() as $rank)
+                    <h6>{{ $rank->name }}{{ $rank->description ? ': '.$rank->description : '' }}{!! $currency ? ' ('.$currency->display($rank->breakpoint).')' : ' ('.$rank->breakpoint.' Standing)' !!}</h6>
+                @endforeach
+            </div>
+        @endif
+    </div>
+    <hr/>
+    <a href="{{ url('world/factions/'.$faction->id.'/members') }}">
+        <h4><small>Members: {{ $faction->factionMembers->count() }} ・ See All</small></h4>
+    </a>
+    </div></div>
+    @endif
 </div>
 
 @endsection

@@ -9,10 +9,15 @@ use Notifications;
 
 use App\Models\WorldExpansion\FactionType;
 use App\Models\WorldExpansion\Faction;
+use App\Models\WorldExpansion\FactionRank;
+use App\Models\WorldExpansion\FactionRankMember;
 use App\Models\WorldExpansion\Figure;
 use App\Models\WorldExpansion\Location;
 use App\Models\WorldExpansion\FactionFigure;
 use App\Models\WorldExpansion\FactionLocation;
+
+use App\Models\User\User;
+use App\Models\Character\Character;
 
 class FactionService extends Service
 {
@@ -222,15 +227,12 @@ class FactionService extends Service
     }
 
 
-
     /*
     |--------------------------------------------------------------------------
     | Factions
     |--------------------------------------------------------------------------
     |
     */
-
-
 
     /**
      * Creates a new faction.
@@ -336,6 +338,73 @@ class FactionService extends Service
                 ]);
             }
 
+            /***************************************************** FACTION RANKS ***************************************************************/
+
+            if(isset($data['rank_name'])) {
+                // Delete old rank members, then ranks
+                foreach($faction->ranks as $rank) $rank->members()->delete();
+                $oldRanks = $faction->ranks()->pluck('id')->toArray();
+                $faction->ranks()->delete();
+
+                foreach($data['rank_name'] as $key=>$rankName) {
+                    // Validate input
+                    if($data['rank_is_open'][$key] && $data['rank_breakpoint'][$key] == null) throw new \Exception('Open ranks must have a breakpoint.');
+                    elseif(!$data['rank_is_open'][$key] && $data['rank_amount'][$key] < 1) throw new \Exception('Closed ranks must have at least one available position.');
+
+                    // Create rank
+                    $ranks[$key] = FactionRank::create([
+                        'faction_id' => $faction->id,
+                        'sort' => $data['rank_sort'][$key],
+                        'name' => $rankName,
+                        'description' => $data['rank_description'][$key],
+                        'is_open' => $data['rank_is_open'][$key],
+                        'breakpoint' => $data['rank_is_open'][$key] ? $data['rank_breakpoint'][$key] : null,
+                        'amount' => $data['rank_is_open'][$key] ? null : $data['rank_amount'][$key]
+                    ]);
+
+                    $rankKey = $oldRanks[$key];
+
+                    // Add members if set
+                    if(isset($data['rank_member_type'][$rankKey])) {
+                        foreach($data['rank_member_type'][$rankKey] as $memberKey=>$memberType) {
+                            // Validate input
+                            if($memberType == 'figure' && !isset($data['rank_figure_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member figure.');
+                            elseif($memberType == 'user' && !isset($data['rank_user_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member user.');
+                            elseif($memberType == 'character' && !isset($data['rank_character_id'][$rankKey][$memberKey])) throw new \Exception('Please select a member character.');
+
+                            if($memberType) {
+                                if($memberType == 'figure') {
+                                    $memberId = $data['rank_figure_id'][$rankKey][$memberKey];
+                                    if(Figure::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected figures are not part of this faction.');
+                                }
+                                elseif($memberType == 'user') {
+                                    $memberId = $data['rank_user_id'][$rankKey][$memberKey];
+                                    if(User::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected users are not part of this faction.');
+                                }
+                                elseif($memberType == 'character') {
+                                    $memberId = $data['rank_character_id'][$rankKey][$memberKey];
+                                    if(Character::where('id', $memberId)->first()->faction_id != $faction->id) throw new \Exception('One or more selected characters are not part of this faction.');
+                                }
+
+                                // Add members
+                                $rankMembers[$rankKey][] = FactionRankMember::create([
+                                    'faction_id' => $faction->id,
+                                    'rank_id' => $ranks[$key]->id,
+                                    'member_type' => $memberType,
+                                    'member_id' => $memberId
+                                ]);
+                            }
+
+                            if(count($rankMembers[$rankKey]) == $ranks[$key]->amount) break;
+                        }
+                    }
+                }
+
+                foreach($ranks as $rank) if(FactionRank::where('faction_id', $faction->id)->where('is_open', 1)->where('breakpoint', $rank->breakpoint)->where('id', '!=', $rank->id)->exists()) throw new \Exception("Rank breakpoints must be unique within the same faction.");
+
+                if(isset($rankMembers[$rankKey])) foreach($rankMembers[$rankKey] as $member) if(FactionRankMember::where('member_type', $member->member_type)->where('member_id', $member->member_id)->where('id', '!=', $member->id)->exists()) throw new \Exception("Can't add the same member to two different positions!");
+            }
+
             $data = $this->populateFactionData($data, $faction);
 
             $image = null;
@@ -420,7 +489,6 @@ class FactionService extends Service
         $saveData['is_user_faction'] = isset($data['user_faction']);
 
         $saveData['display_style'] = isset($data['style']) ? $data['style'] : 0 ;
-
 
         $saveData['type_id'] = $data['type_id'];
         $saveData['parent_id'] = $data['parent_id'];

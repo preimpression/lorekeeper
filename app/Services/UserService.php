@@ -14,6 +14,7 @@ use App\Models\Rank\Rank;
 use App\Models\Character\CharacterTransfer;
 use App\Models\WorldExpansion\Location;
 use App\Models\WorldExpansion\Faction;
+use App\Models\WorldExpansion\FactionRankMember;
 use App\Models\Character\CharacterDesignUpdate;
 use App\Models\Submission\Submission;
 use App\Models\Gallery\GallerySubmission;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Services\SubmissionManager;
 use App\Services\GalleryManager;
 use App\Services\CharacterManager;
+use App\Services\CurrencyManager;
 use App\Models\Trade;
 
 class UserService extends Service
@@ -48,11 +50,16 @@ class UserService extends Service
         // If the rank is not given, create a user with the lowest existing rank.
         if(!isset($data['rank_id'])) $data['rank_id'] = Rank::orderBy('sort')->first()->id;
 
+        // Make birthday into format we can store
+        $date = $data['dob']['day']."-".$data['dob']['month']."-".$data['dob']['year'];
+        $formatDate = carbon::parse($date);
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'rank_id' => $data['rank_id'],
             'password' => Hash::make($data['password']),
+            'birthday' => $formatDate,
         ]);
         $user->settings()->create([
             'user_id' => $user->id,
@@ -120,6 +127,7 @@ class UserService extends Service
         DB::beginTransaction();
 
         try {
+            if($user->faction) $old = $user->faction;
             $faction = Faction::find($id);
             if(!$faction) throw new \Exception("Not a valid faction.");
 
@@ -132,6 +140,15 @@ class UserService extends Service
                 $user->save();
             }
             else throw new \Exception("You can't change your faction yet!");
+
+            // Reset standing/remove from closed rank
+            if(isset($old) && $faction->id != $old->id) {
+                $standing = $user->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();
+                if($standing && $standing->quantity > 0) if(!$debit = (new CurrencyManager)->debitCurrency($user, null, 'Changed Factions', null, $standing, $standing->quantity))
+                    throw new \Exception('Failed to reset standing.');
+
+                if(FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()) FactionRankMember::where('member_type', 'user')->where('member_id', $user->id)->first()->delete();
+            }
 
             return $this->commitReturn(true);
         } catch(\Exception $e) {
@@ -180,6 +197,28 @@ class UserService extends Service
         $user->save();
 
         $user->sendEmailVerificationNotification();
+
+        return true;
+    }
+
+    /**
+     * Updates user's birthday
+     */
+    public function updateBirthday($data, $user)
+    {
+        $user->birthday = $data;
+        $user->save();
+
+        return true;
+    }
+
+    /**
+     * Updates user's birthday setting
+     */
+    public function updateDOB($data, $user)
+    {
+        $user->settings->birthday_setting = $data;
+        $user->settings->save();
 
         return true;
     }
