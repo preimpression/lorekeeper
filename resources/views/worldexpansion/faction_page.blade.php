@@ -167,12 +167,12 @@
     </div></div>
     @endif
 
-    @if($faction->ranks()->where('is_open', 0)->count())
+    @if($faction->ranks()->count())
     <div class="w-100"></div>
     <div class="text-center col-md-12"><div class="card h-100 py-3">
      <h5 class="mb-0">Faction Ranks</h5>
 
-    {!! $faction->ranks()->count() ? '<hr/>' : '' !!}
+    <hr/>
     <div class="row">
         @if($faction->ranks()->where('is_open', 0)->count())
             <div class="col-md">
