@@ -343,7 +343,7 @@ class FactionService extends Service
             if(isset($data['rank_name'])) {
                 // Delete old rank members, then ranks
                 foreach($faction->ranks as $rank) $rank->members()->delete();
-                $oldRanks = $faction->ranks()->pluck('id')->toArray();
+                if($faction->ranks()->count()) $oldRanks = $faction->ranks()->pluck('id')->toArray();
                 $faction->ranks()->delete();
 
                 foreach($data['rank_name'] as $key=>$rankName) {
@@ -362,7 +362,7 @@ class FactionService extends Service
                         'amount' => $data['rank_is_open'][$key] ? null : $data['rank_amount'][$key]
                     ]);
 
-                    $rankKey = $oldRanks[$key];
+                    if(isset($oldRanks)) $rankKey = $oldRanks[$key];
 
                     // Add members if set
                     if(isset($data['rank_member_type'][$rankKey])) {
