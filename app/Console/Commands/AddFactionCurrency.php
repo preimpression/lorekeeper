@@ -52,9 +52,15 @@ class AddFactionCurrency extends Command
 
         if($this->confirm('Do you wish to continue?')) {
             // Currency
-            $userOwned = $this->confirm('Do you want to track faction standing for users?');
-            $characterOwned = $this->confirm('Do you want to track faction standing for characters?');
-            $this>line('These settings can be changed by editing the currency.');
+            if(!$this->confirm('Do you want to use your current site settings for user and character factions? If not, you will be asked whether you want to track faction standing for each.')) {
+                $userOwned = $this->confirm('Do you want to track faction standing for users?');
+                $characterOwned = $this->confirm('Do you want to track faction standing for characters?');
+                $this->line('These settings can be changed by editing the "Faction Standing" currency.');
+            }
+            else {
+                $userOwned = Settings::get('WE_user_factions') > 0 ? true : false;
+                $characterOwned = Settings::get('WE_character_factions') > 0 ? true : false;
+            }
 
             $this->line("Adding currency...\n");
 
