@@ -340,12 +340,12 @@ class FactionService extends Service
 
             /***************************************************** FACTION RANKS ***************************************************************/
 
-            if(isset($data['rank_name'])) {
-                // Delete old rank members, then ranks
-                foreach($faction->ranks as $rank) $rank->members()->delete();
-                if($faction->ranks()->count()) $oldRanks = $faction->ranks()->pluck('id')->toArray();
-                $faction->ranks()->delete();
+            // Delete old rank members, then ranks
+            foreach($faction->ranks as $rank) $rank->members()->delete();
+            if($faction->ranks()->count()) $oldRanks = $faction->ranks()->pluck('id')->toArray();
+            $faction->ranks()->delete();
 
+            if(isset($data['rank_name'])) {
                 foreach($data['rank_name'] as $key=>$rankName) {
                     // Validate input
                     if($data['rank_is_open'][$key] && $data['rank_breakpoint'][$key] == null) throw new \Exception('Open ranks must have a breakpoint.');
@@ -362,7 +362,8 @@ class FactionService extends Service
                         'amount' => $data['rank_is_open'][$key] ? null : $data['rank_amount'][$key]
                     ]);
 
-                    if(isset($oldRanks)) $rankKey = $oldRanks[$key];
+                    if(isset($oldRanks) && isset($oldRanks[$key])) $rankKey = $oldRanks[$key];
+                    else $rankKey = null;
 
                     // Add members if set
                     if(isset($data['rank_member_type'][$rankKey])) {
@@ -395,14 +396,14 @@ class FactionService extends Service
                                 ]);
                             }
 
-                            if(count($rankMembers[$rankKey]) == $ranks[$key]->amount) break;
+                            if(isset($rankMembers[$rankKey]) && count($rankMembers[$rankKey]) == $ranks[$key]->amount) break;
                         }
                     }
                 }
 
                 foreach($ranks as $rank) if(FactionRank::where('faction_id', $faction->id)->where('is_open', 1)->where('breakpoint', $rank->breakpoint)->where('id', '!=', $rank->id)->exists()) throw new \Exception("Rank breakpoints must be unique within the same faction.");
 
-                if(isset($rankMembers[$rankKey])) foreach($rankMembers[$rankKey] as $member) if(FactionRankMember::where('member_type', $member->member_type)->where('member_id', $member->member_id)->where('id', '!=', $member->id)->exists()) throw new \Exception("Can't add the same member to two different positions!");
+                if(isset($rankMembers) && isset($rankMembers[$rankKey])) foreach($rankMembers[$rankKey] as $member) if(FactionRankMember::where('member_type', $member->member_type)->where('member_id', $member->member_id)->where('id', '!=', $member->id)->exists()) throw new \Exception("Can't add the same member to two different positions!");
             }
 
             $data = $this->populateFactionData($data, $faction);
