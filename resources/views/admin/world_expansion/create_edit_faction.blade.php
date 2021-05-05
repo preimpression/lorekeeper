@@ -160,7 +160,7 @@
                                             <div class="{{ $member->member_type == 'figure' ? 'show' : 'hide' }} figureOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Figure') !!}
-                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figures, $member->member_type == 'figure' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
+                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figureOptions, $member->member_type == 'figure' ? $member->member_id : null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
                                                 </div>
                                             </div>
                                             <div class="{{ $member->member_type == 'user' ? 'show' : 'hide' }} userOptions">
@@ -195,7 +195,7 @@
                                             <div class="hide figureOptions">
                                                 <div class="form-group">
                                                     {!! Form::label('Figure') !!}
-                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figures, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
+                                                    {!! Form::select('rank_figure_id['.$rank->id.'][]', $figureOptions, null, ['class' => 'form-control mr-2 selectize', 'placeholder' => 'Select Figure']) !!}
                                                 </div>
                                             </div>
                                             <div class="hide userOptions">
