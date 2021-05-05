@@ -204,7 +204,8 @@ class FactionController extends Controller
             'types' => FactionType::all()->pluck('name','id')->toArray(),
             'factions' => Faction::all()->where('id','!=',$faction->id)->pluck('name','id')->toArray(),
             'locations' => Location::all()->pluck('name','id')->toArray(),
-            'figures' => Figure::all()->where('faction_id', $faction->id)->pluck('name','id')->toArray(),
+            'figures' => Figure::all()->pluck('name','id')->toArray(),
+            'figureOptions' => Figure::all()->where('faction_id', $faction->id)->pluck('name','id')->toArray(),
             'users' => User::visible()->where('faction_id', $faction->id)->orderBy('name')->pluck('name', 'id')->toArray(),
             'characters' => Character::visible()->myo(0)->where('faction_id', $faction->id)->orderBy('sort','DESC')->get()->pluck('fullName','id')->toArray(),
             'ch_enabled' => Settings::get('WE_character_factions'),
@@ -293,33 +294,4 @@ class FactionController extends Controller
         }
         return redirect()->back();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
