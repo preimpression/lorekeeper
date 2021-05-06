@@ -33,7 +33,7 @@
     @endif
 @endif
 
-@if($char_enabled == 2 || (Auth::user()->isStaff && $char_enabled == 3))
+@if(!$character->is_myo_slot && ($char_enabled == 2 || (Auth::user()->isStaff && $char_enabled == 3)))
 @if(Auth::user()->isStaff && $char_enabled == 3)
     <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character locations freely.</div>
 @endif
@@ -45,7 +45,7 @@
 </div>
 @endif
 
-@if($char_faction_enabled == 2 || (Auth::user()->isStaff && $char_faction_enabled == 3))
+@if(!$character->is_myo_slot && ($char_faction_enabled == 2 || (Auth::user()->isStaff && $char_faction_enabled == 3)))
 @if(Auth::user()->isStaff && $char_faction_enabled == 3)
     <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character factions freely.</div>
 @endif
