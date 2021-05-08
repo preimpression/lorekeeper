@@ -124,7 +124,7 @@
 <script>
 $( document ).ready(function() {
     $('.delete-figure-button').on('click', function(e) {
-        e.prfigureDefault();
+        e.preventDefault();
         loadModal("{{ url('admin/world/figures/delete') }}/{{ $figure->id }}", 'Delete Figure');
     });
     $('.selectize').selectize();
