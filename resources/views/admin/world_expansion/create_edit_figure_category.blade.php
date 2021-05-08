@@ -78,7 +78,7 @@
 <script>
 $( document ).ready(function() {
     $('.delete-category-button').on('click', function(e) {
-        e.prfigureDefault();
+        e.preventDefault();
         loadModal("{{ url('admin/world/figure-categories/delete') }}/{{ $category->id }}", 'Delete Figure Category');
     });
     $('.selectize').selectize();
