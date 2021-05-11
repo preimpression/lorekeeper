@@ -60,11 +60,6 @@
     {!! Form::textarea('description', $category->description, ['class' => 'form-control wysiwyg']) !!}
 </div>
 
-<div class="form-group">
-    {!! Form::checkbox('is_active', 1, $category->id ? $category->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-    {!! Form::label('is_active', 'Set Active', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the category will not be visible to regular users.') !!}
-</div>
-
 <div class="text-right">
     {!! Form::submit($category->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>
@@ -83,6 +78,6 @@ $( document ).ready(function() {
     });
     $('.selectize').selectize();
 });
-    
+
 </script>
 @endsection

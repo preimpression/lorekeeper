@@ -14,7 +14,7 @@ use Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\ConceptService;
+use App\Services\WorldExpansion\ConceptService;
 
 class ConceptController extends Controller
 {
@@ -69,7 +69,7 @@ class ConceptController extends Controller
      * Creates or edits a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -111,7 +111,7 @@ class ConceptController extends Controller
      * Deletes a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -130,7 +130,7 @@ class ConceptController extends Controller
      * Sorts categories.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortConceptCategory(Request $request, ConceptService $service)
@@ -201,7 +201,7 @@ class ConceptController extends Controller
      * Creates or edits a concept.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -244,7 +244,7 @@ class ConceptController extends Controller
      * Deletes a concept.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -263,7 +263,7 @@ class ConceptController extends Controller
      * Sorts concepts.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\ConceptService  $service
+     * @param  App\Services\WorldExpansion\ConceptService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortConcept(Request $request, ConceptService $service)

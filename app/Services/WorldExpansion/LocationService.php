@@ -1,4 +1,4 @@
-<?php namespace App\Services;
+<?php namespace App\Services\WorldExpansion;
 
 use App\Services\Service;
 
@@ -25,7 +25,7 @@ class LocationService extends Service
     /**
      * Creates a new location type.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Location\Type
      */
@@ -63,17 +63,17 @@ class LocationService extends Service
             }
 
             return $this->commitReturn($type);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
-    
+
     /**
      * Updates a type.
      *
      * @param  \App\Models\Type\Type  $type
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Type\Type
      */
@@ -88,7 +88,7 @@ class LocationService extends Service
 
             $data = $this->populateLocationTypeData($data, $type);
 
-            $image = null;            
+            $image = null;
             if(isset($data['image']) && $data['image']) {
                 if(isset($type->image_extension)) $old = $type->imageFileName;
                 else $old = null;
@@ -101,7 +101,7 @@ class LocationService extends Service
                 $this->handleImage($image, $type->imagePath, $type->imageFileName, $old);
             }
 
-            $image_th = null;            
+            $image_th = null;
             if(isset($data['image_th']) && $data['image_th']) {
                 if(isset($type->thumb_extension)) $old_th = $type->thumbFileName;
                 else $old_th = null;
@@ -117,14 +117,14 @@ class LocationService extends Service
             $type->update($data);
 
             return $this->commitReturn($type);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
 
-    
+
     /**
      * Deletes a type.
      *
@@ -138,17 +138,17 @@ class LocationService extends Service
         try {
 
             if(isset($type->image_extension)) $this->deleteImage($type->imagePath, $type->imageFileName);
-            if(isset($type->thumb_extension)) $this->deleteImage($type->imagePath, $type->thumbFileName); 
+            if(isset($type->thumb_extension)) $this->deleteImage($type->imagePath, $type->thumbFileName);
             if(count($type->locations)){
                 foreach($type->locations as $location){
                     if(isset($location->image_extension)) $this->deleteImage($location->imagePath, $location->imageFileName);
-                    if(isset($location->thumb_extension)) $this->deleteImage($location->imagePath, $location->thumbFileName); 
+                    if(isset($location->thumb_extension)) $this->deleteImage($location->imagePath, $location->thumbFileName);
                 }
             }
             $type->delete();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -173,7 +173,7 @@ class LocationService extends Service
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -182,7 +182,7 @@ class LocationService extends Service
     /**
      * Processes user input for creating/updating a type.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\Type\Type  $type
      * @return array
      */
@@ -191,29 +191,28 @@ class LocationService extends Service
         if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
         if(isset($data['name']) && $data['name']) $data['name'] = parse($data['name']);
         if(isset($data['names']) && $data['names']) $data['names'] = parse($data['names']);
-        $data['is_active'] = isset($data['is_active']);
 
         if(isset($data['remove_image']))
         {
-            if($type && isset($type->image_extension) && $data['remove_image']) 
-            { 
-                $data['image_extension'] = null; 
-                $this->deleteImage($type->imagePath, $type->imageFileName); 
+            if($type && isset($type->image_extension) && $data['remove_image'])
+            {
+                $data['image_extension'] = null;
+                $this->deleteImage($type->imagePath, $type->imageFileName);
             }
             unset($data['remove_image']);
         }
-        
+
         if(isset($data['remove_image_th']) && $data['remove_image_th'])
         {
-            if($type && isset($type->thumb_extension) && $data['remove_image_th']) 
-            { 
-                $data['thumb_extension'] = null; 
-                $this->deleteImage($type->imagePath, $type->thumbFileName); 
+            if($type && isset($type->thumb_extension) && $data['remove_image_th'])
+            {
+                $data['thumb_extension'] = null;
+                $this->deleteImage($type->imagePath, $type->thumbFileName);
             }
             unset($data['remove_image_th']);
         }
-        
-        
+
+
         return $data;
     }
 
@@ -231,7 +230,7 @@ class LocationService extends Service
     /**
      * Creates a new location.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\Location\Type
      */
@@ -269,17 +268,17 @@ class LocationService extends Service
             }
 
             return $this->commitReturn($location);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
-    
+
     /**
      * Updates a location.
      *
      * @param  \App\Models\WorldExpansion\Location  $location
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\WorldExpansion\Location
      */
@@ -294,7 +293,7 @@ class LocationService extends Service
 
             $data = $this->populateLocationData($data, $location);
 
-            $image = null;            
+            $image = null;
             if(isset($data['image']) && $data['image']) {
                 if(isset($location->image_extension)) $old = $location->imageFileName;
                 else $old = null;
@@ -307,7 +306,7 @@ class LocationService extends Service
                 $this->handleImage($image, $location->imagePath, $location->imageFileName, $old);
             }
 
-            $image_th = null;            
+            $image_th = null;
             if(isset($data['image_th']) && $data['image_th']) {
                 if(isset($location->thumb_extension)) $old_th = $location->thumbFileName;
                 else $old_th = null;
@@ -324,13 +323,13 @@ class LocationService extends Service
             $location->update($data);
 
             return $this->commitReturn($location);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
-    
+
     /**
      * Deletes a location.
      *
@@ -342,11 +341,11 @@ class LocationService extends Service
         DB::beginTransaction();
 
         try {
-            if($location && isset($location->image_extension)) $this->deleteImage($location->imagePath, $location->imageFileName); 
-            if($location && isset($location->thumb_extension)) $this->deleteImage($location->imagePath, $location->thumbFileName); 
+            if($location && isset($location->image_extension)) $this->deleteImage($location->imagePath, $location->imageFileName);
+            if($location && isset($location->thumb_extension)) $this->deleteImage($location->imagePath, $location->thumbFileName);
             $location->delete();
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -355,7 +354,7 @@ class LocationService extends Service
     /**
      * Processes user input for creating/updating a location.
      *
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\WorldExpansion\Location  $location
      * @return array
      */
@@ -383,24 +382,24 @@ class LocationService extends Service
 
         if(isset($data['remove_image']))
         {
-            if($location && isset($location->image_extension) && $data['remove_image']) 
-            { 
-                $saveData['image_extension'] = null; 
-                $this->deleteImage($location->imagePath, $location->imageFileName); 
+            if($location && isset($location->image_extension) && $data['remove_image'])
+            {
+                $saveData['image_extension'] = null;
+                $this->deleteImage($location->imagePath, $location->imageFileName);
             }
             unset($data['remove_image']);
         }
-        
+
         if(isset($data['remove_image_th']) && $data['remove_image_th'])
         {
-            if($location && isset($location->thumb_extension) && $data['remove_image_th']) 
-            { 
-                $saveData['thumb_extension'] = null; 
-                $this->deleteImage($location->imagePath, $location->thumbFileName); 
+            if($location && isset($location->thumb_extension) && $data['remove_image_th'])
+            {
+                $saveData['thumb_extension'] = null;
+                $this->deleteImage($location->imagePath, $location->thumbFileName);
             }
             unset($data['remove_image_th']);
         }
-        
+
         return $saveData;
     }
 
@@ -424,7 +423,7 @@ class LocationService extends Service
             }
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);

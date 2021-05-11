@@ -14,7 +14,7 @@ use Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\NatureService;
+use App\Services\WorldExpansion\NatureService;
 
 class FloraController extends Controller
 {
@@ -69,7 +69,7 @@ class FloraController extends Controller
      * Creates or edits a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -111,7 +111,7 @@ class FloraController extends Controller
      * Deletes a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -130,7 +130,7 @@ class FloraController extends Controller
      * Sorts categories.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFloraCategory(Request $request, NatureService $service)
@@ -205,7 +205,7 @@ class FloraController extends Controller
      * Creates or edits a flora.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -248,7 +248,7 @@ class FloraController extends Controller
      * Deletes a flora.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -267,7 +267,7 @@ class FloraController extends Controller
      * Sorts floras.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\NatureService  $service
+     * @param  App\Services\WorldExpansion\NatureService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFlora(Request $request, NatureService $service)

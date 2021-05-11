@@ -11,7 +11,7 @@ use Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\LocationService;
+use App\Services\WorldExpansion\LocationService;
 
 class LocationController extends Controller
 {
@@ -66,7 +66,7 @@ class LocationController extends Controller
      * Creates or edits a type.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -108,7 +108,7 @@ class LocationController extends Controller
      * Deletes a type.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -127,7 +127,7 @@ class LocationController extends Controller
      * Sorts types.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortLocationType(Request $request, LocationService $service)
@@ -210,7 +210,7 @@ class LocationController extends Controller
      * Creates or edits a location.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -253,7 +253,7 @@ class LocationController extends Controller
      * Deletes a location.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -272,7 +272,7 @@ class LocationController extends Controller
      * Sorts locations.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\LocationService  $service
+     * @param  App\Services\WorldExpansion\LocationService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortLocation(Request $request, LocationService $service)

@@ -15,7 +15,7 @@ use Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\FactionService;
+use App\Services\WorldExpansion\FactionService;
 
 class FactionController extends Controller
 {
@@ -70,7 +70,7 @@ class FactionController extends Controller
      * Creates or edits a type.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -112,7 +112,7 @@ class FactionController extends Controller
      * Deletes a type.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -131,7 +131,7 @@ class FactionController extends Controller
      * Sorts types.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFactionType(Request $request, FactionService $service)
@@ -217,7 +217,7 @@ class FactionController extends Controller
      * Creates or edits a faction.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -262,7 +262,7 @@ class FactionController extends Controller
      * Deletes a faction.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -281,7 +281,7 @@ class FactionController extends Controller
      * Sorts factions.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FactionService  $service
+     * @param  App\Services\WorldExpansion\FactionService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFaction(Request $request, FactionService $service)

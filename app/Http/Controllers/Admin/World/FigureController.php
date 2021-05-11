@@ -20,7 +20,7 @@ use Settings;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\Services\FigureService;
+use App\Services\WorldExpansion\FigureService;
 
 class FigureController extends Controller
 {
@@ -75,7 +75,7 @@ class FigureController extends Controller
      * Creates or edits a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -117,7 +117,7 @@ class FigureController extends Controller
      * Deletes a category.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -136,7 +136,7 @@ class FigureController extends Controller
      * Sorts categories.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFigureCategory(Request $request, FigureService $service)
@@ -213,7 +213,7 @@ class FigureController extends Controller
      * Creates or edits a figure.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @param  int|null                  $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -257,7 +257,7 @@ class FigureController extends Controller
      * Deletes a figure.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @param  int                       $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -276,7 +276,7 @@ class FigureController extends Controller
      * Sorts figures.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\Services\FigureService  $service
+     * @param  App\Services\WorldExpansion\FigureService  $service
      * @return \Illuminate\Http\RedirectResponse
      */
     public function postSortFigure(Request $request, FigureService $service)

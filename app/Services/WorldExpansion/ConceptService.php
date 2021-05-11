@@ -1,4 +1,4 @@
-<?php namespace App\Services;
+<?php namespace App\Services\WorldExpansion;
 
 use App\Services\Service;
 
@@ -202,7 +202,6 @@ class ConceptService extends Service
     {
         if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
         if(isset($data['name']) && $data['name']) $data['name'] = parse($data['name']);
-        $data['is_active'] = isset($data['is_active']);
 
         if(isset($data['remove_image']))
         {

@@ -65,11 +65,6 @@
     {!! Form::textarea('description', $type->description, ['class' => 'form-control wysiwyg']) !!}
 </div>
 
-<div class="form-group">
-    {!! Form::checkbox('is_active', 1, $type->id ? $type->is_active : 1, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-    {!! Form::label('is_active', 'Set Active', ['class' => 'form-check-label ml-3']) !!} {!! add_help('If turned off, the type will not be visible to regular users.') !!}
-</div>
-
 <div class="text-right">
     {!! Form::submit($type->id ? 'Edit' : 'Create', ['class' => 'btn btn-primary']) !!}
 </div>
@@ -88,6 +83,6 @@ $( document ).ready(function() {
     });
     $('.selectize').selectize();
 });
-    
+
 </script>
 @endsection
