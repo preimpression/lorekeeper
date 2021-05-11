@@ -2,8 +2,9 @@
 
 namespace App\Models\WorldExpansion;
 
-use Config;
 use DB;
+use Auth;
+use Config;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -87,7 +88,7 @@ class Figure extends Model
      */
     public function faction()
     {
-        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'faction_id');
+        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'faction_id')->visible();
     }
 
     /**
@@ -104,7 +105,7 @@ class Figure extends Model
      */
     public function events()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Event', 'event_figures')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Event', 'event_figures')->visible()->withPivot('id');
     }
 
     /**
@@ -112,7 +113,25 @@ class Figure extends Model
      */
     public function factions()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Faction', 'faction_figures')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Faction', 'faction_figures')->visible()->withPivot('id');
+    }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include visible posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) return $query->where('is_active', 1);
+        else return $query;
     }
 
     /**********************************************************************************************

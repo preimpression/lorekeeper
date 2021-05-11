@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WorldExpansion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use Settings;
 
 use App\Models\WorldExpansion\Location;
@@ -57,7 +58,7 @@ class FigureController extends Controller
      */
     public function getFigureCategory($id)
     {
-        $category = FigureCategory::where('is_active',1)->find($id);
+        $category = FigureCategory::find($id);
         if(!$category) abort(404);
 
         return view('worldexpansion.figure_category_page', [
@@ -102,6 +103,8 @@ class FigureController extends Controller
         }
         else $query->sortCategory();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.figures', [
             'figures' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + FigureCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
@@ -116,15 +119,15 @@ class FigureController extends Controller
      */
     public function getFigure($id)
     {
-        $figure = Figure::where('is_active',1)->find($id);
-        if(!$figure) abort(404);
+        $figure = Figure::find($id);
+        if(!$figure->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.figure_page', [
             'figure' => $figure,
-            'figure_categories'     => FigureCategory::where('is_active',1)->get(),
+            'figure_categories'     => FigureCategory::get(),
             'item_categories'       => ItemCategory::get(),
-            'event_categories'      => EventCategory::where('is_active',1)->get(),
-            'faction_categories'      => FactionType::where('is_active',1)->get(),
+            'event_categories'      => EventCategory::get(),
+            'faction_categories'      => FactionType::get(),
         ]);
     }
 

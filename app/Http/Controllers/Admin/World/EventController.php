@@ -84,7 +84,7 @@ class EventController extends Controller
         $id ? $request->validate(EventCategory::$updateRules) : $request->validate(EventCategory::$createRules);
 
         $data = $request->only([
-            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary'
+            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'summary'
         ]);
         if($id && $service->updateEventCategory(EventCategory::find($id), $data, Auth::user())) {
             flash('Event category updated successfully.')->success();

@@ -2,9 +2,10 @@
 
 namespace App\Models\WorldExpansion;
 
-use Settings;
-use Config;
 use DB;
+use Auth;
+use Config;
+use Settings;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -85,7 +86,7 @@ class Faction extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'parent_id');
+        return $this->belongsTo('App\Models\WorldExpansion\Faction', 'parent_id')->visible();
     }
 
     /**
@@ -93,7 +94,7 @@ class Faction extends Model
      */
     public function children()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Faction', 'parent_id');
+        return $this->hasMany('App\Models\WorldExpansion\Faction', 'parent_id')->visible();
     }
 
     /**
@@ -109,7 +110,7 @@ class Faction extends Model
      */
     public function figures()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Figure', 'faction_figures')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Figure', 'faction_figures')->visible()->withPivot('id');
     }
 
     /**
@@ -117,7 +118,7 @@ class Faction extends Model
      */
     public function locations()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'faction_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'faction_locations')->visible()->withPivot('id');
     }
 
     /**
@@ -125,7 +126,7 @@ class Faction extends Model
      */
     public function members()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Figure', 'faction_id');
+        return $this->hasMany('App\Models\WorldExpansion\Figure', 'faction_id')->visible();
     }
 
     /**
@@ -141,6 +142,18 @@ class Faction extends Model
         SCOPES
 
     **********************************************************************************************/
+
+    /**
+     * Scope a query to only include visible posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) return $query->where('is_active', 1);
+        else return $query;
+    }
 
     /**
      * Scope a query to sort items in category order.

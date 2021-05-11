@@ -28,13 +28,13 @@ class EventLocation extends Model
      * @var string
      */
     protected $table = 'event_locations';
-    
+
     public $timestamps = false;
 
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
@@ -42,14 +42,14 @@ class EventLocation extends Model
     /**
      * Get the event attached to this.
      */
-    public function event() 
+    public function event()
     {
         return $this->belongsTo('App\Models\WorldExpansion\Event', 'event_id');
     }
     /**
      * Get the location attached to this.
      */
-    public function location() 
+    public function location()
     {
         return $this->belongsTo('App\Models\WorldExpansion\Location', 'location_id');
     }

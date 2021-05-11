@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WorldExpansion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use Settings;
 
 use App\Models\WorldExpansion\Flora;
@@ -58,7 +59,7 @@ class NatureController extends Controller
      */
     public function getFaunaCategory($id)
     {
-        $category = FaunaCategory::where('is_active',1)->find($id);
+        $category = FaunaCategory::find($id);
         if(!$category) abort(404);
 
         return view('worldexpansion.fauna_category_page', [
@@ -103,6 +104,8 @@ class NatureController extends Controller
         }
         else $query->sortCategory();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.faunas', [
             'faunas' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + FaunaCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
@@ -117,15 +120,15 @@ class NatureController extends Controller
      */
     public function getFauna($id)
     {
-        $fauna = Fauna::where('is_active',1)->find($id);
-        if(!$fauna) abort(404);
+        $fauna = Fauna::find($id);
+        if(!$fauna->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.fauna_page', [
             'fauna' => $fauna,
-            'fauna_categories'  => FaunaCategory::where('is_active',1)->get(),
-            'flora_categories'  => FloraCategory::where('is_active',1)->get(),
+            'fauna_categories'  => FaunaCategory::get(),
+            'flora_categories'  => FloraCategory::get(),
             'item_categories'   => ItemCategory::get(),
-            'location_types'     => LocationType::where('is_active',1)->get(),
+            'location_types'     => LocationType::get(),
         ]);
     }
 
@@ -156,7 +159,7 @@ class NatureController extends Controller
      */
     public function getFloraCategory($id)
     {
-        $category = FloraCategory::where('is_active',1)->find($id);
+        $category = FloraCategory::find($id);
         if(!$category) abort(404);
 
         return view('worldexpansion.flora_category_page', [
@@ -201,6 +204,8 @@ class NatureController extends Controller
         }
         else $query->sortCategory();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.floras', [
             'floras' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + FloraCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
@@ -215,15 +220,15 @@ class NatureController extends Controller
      */
     public function getFlora($id)
     {
-        $flora = Flora::where('is_active',1)->find($id);
-        if(!$flora) abort(404);
+        $flora = Flora::find($id);
+        if(!$flora->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.flora_page', [
             'flora' => $flora,
-            'fauna_categories'  => FaunaCategory::where('is_active',1)->get(),
-            'flora_categories'  => FloraCategory::where('is_active',1)->get(),
+            'fauna_categories'  => FaunaCategory::get(),
+            'flora_categories'  => FloraCategory::get(),
             'item_categories'   => ItemCategory::get(),
-            'location_types'     => LocationType::where('is_active',1)->get(),
+            'location_types'     => LocationType::get(),
         ]);
     }
 

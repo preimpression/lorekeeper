@@ -2,8 +2,9 @@
 
 namespace App\Models\WorldExpansion;
 
-use Config;
 use DB;
+use Auth;
+use Config;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,9 +24,9 @@ class Flora extends Model
      * @var array
      */
     protected $fillable = [
-        'name','description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 
+        'name','description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension',
         'category_id', 'is_active', 'scientific_name'
-        
+
     ];
 
 
@@ -35,9 +36,9 @@ class Flora extends Model
      * @var string
      */
     protected $table = 'floras';
-    
+
     public $timestamps = true;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -66,7 +67,7 @@ class Flora extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
@@ -74,7 +75,7 @@ class Flora extends Model
     /**
      * Get the location attached to this location.
      */
-    public function category() 
+    public function category()
     {
         return $this->belongsTo('App\Models\WorldExpansion\FloraCategory', 'category_id');
     }
@@ -82,7 +83,7 @@ class Flora extends Model
     /**
      * Get the items attached to this flora.
      */
-    public function items() 
+    public function items()
     {
         return $this->belongsToMany('App\Models\Item\Item', 'flora_items')->withPivot('id');
     }
@@ -90,13 +91,32 @@ class Flora extends Model
     /**
      * Get the locations attached to this flora.
      */
-    public function locations() 
+    public function locations()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'flora_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'flora_locations')->visible()->withPivot('id');
     }
 
     /**********************************************************************************************
-    
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include visible posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) return $query->where('is_active', 1);
+        else return $query;
+    }
+
+
+    /**********************************************************************************************
+
         ACCESSORS
 
     **********************************************************************************************/
@@ -154,8 +174,8 @@ class Flora extends Model
     {
         return public_path($this->imageDirectory);
     }
-    
-    
+
+
 
     /**
      * Gets the file name of the model's image.
@@ -166,7 +186,7 @@ class Flora extends Model
     {
         return $this->id . '-image.' . $this->image_extension;
     }
-    
+
 
     /**
      * Gets the file name of the model's thumbnail image.
@@ -188,7 +208,7 @@ class Flora extends Model
         if (!$this->image_extension) return null;
         return asset($this->imageDirectory . '/' . $this->imageFileName);
     }
-    
+
     /**
      * Gets the URL of the model's thumbnail image.
      *
@@ -210,15 +230,15 @@ class Flora extends Model
         return url('world/floras/'.$this->id);
     }
 
-    
+
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
 
-    
+
 
     /**
      * Scope a query to sort items in category order.

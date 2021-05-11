@@ -75,7 +75,7 @@ class LocationController extends Controller
         $id ? $request->validate(LocationType::$updateRules) : $request->validate(LocationType::$createRules);
 
         $data = $request->only([
-            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary'
+            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'summary'
         ]);
         if($id && $service->updateLocationType(LocationType::find($id), $data, Auth::user())) {
             flash('Location type updated successfully.')->success();

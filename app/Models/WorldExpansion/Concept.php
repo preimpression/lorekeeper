@@ -2,8 +2,9 @@
 
 namespace App\Models\WorldExpansion;
 
-use Config;
 use DB;
+use Auth;
+use Config;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -90,7 +91,25 @@ class Concept extends Model
      */
     public function locations()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'concept_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Location', 'concept_locations')->visible()->withPivot('id');
+    }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include visible posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) return $query->where('is_active', 1);
+        else return $query;
     }
 
     /**********************************************************************************************

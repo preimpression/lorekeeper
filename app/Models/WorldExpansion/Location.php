@@ -2,8 +2,9 @@
 
 namespace App\Models\WorldExpansion;
 
-use Config;
 use DB;
+use Auth;
+use Config;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -83,7 +84,7 @@ class Location extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('App\Models\WorldExpansion\Location', 'parent_id');
+        return $this->belongsTo('App\Models\WorldExpansion\Location', 'parent_id')->visible();
     }
 
     /**
@@ -91,7 +92,7 @@ class Location extends Model
      */
     public function children()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Location', 'parent_id');
+        return $this->hasMany('App\Models\WorldExpansion\Location', 'parent_id')->visible();
     }
 
     /**
@@ -99,7 +100,7 @@ class Location extends Model
      */
     public function fauna()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Fauna', 'fauna_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Fauna', 'fauna_locations')->visible()->withPivot('id');
     }
 
     /**
@@ -107,7 +108,7 @@ class Location extends Model
      */
     public function flora()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Flora', 'flora_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Flora', 'flora_locations')->visible()->withPivot('id');
     }
 
 
@@ -116,7 +117,7 @@ class Location extends Model
      */
     public function events()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Event', 'event_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Event', 'event_locations')->visible()->withPivot('id');
     }
 
     /**
@@ -124,8 +125,27 @@ class Location extends Model
      */
     public function factions()
     {
-        return $this->belongsToMany('App\Models\WorldExpansion\Faction', 'faction_locations')->withPivot('id');
+        return $this->belongsToMany('App\Models\WorldExpansion\Faction', 'faction_locations')->visible()->withPivot('id');
     }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+    /**
+     * Scope a query to only include visible posts.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVisible($query)
+    {
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) return $query->where('is_active', 1);
+        else return $query;
+    }
+
 
 
     /**********************************************************************************************

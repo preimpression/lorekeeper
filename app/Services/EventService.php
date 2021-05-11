@@ -332,6 +332,7 @@ class EventService extends Service
 
             /***************************************************** EVENT LOCATIONS ***************************************************************/
             // Determine if there are locations added.
+
             if(isset($data['location_id'])) {
                 $data['location_id'] = array_unique($data['location_id']);
                 $locations = Location::whereIn('id', $data['location_id'])->get();
@@ -360,7 +361,7 @@ class EventService extends Service
             else $factions = [];
 
             // Remove all factions from the event so they can be reattached with new data
-            EventLocation::where('event_id',$event->id)->delete();
+            EventFaction::where('event_id',$event->id)->delete();
 
             // Attach any factions to the event
             foreach($factions as $key=>$faction) {

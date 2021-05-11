@@ -21,7 +21,7 @@ class FaunaController extends Controller
 
 
     /**********************************************************************************************
-    
+
         Fauna Types
 
     **********************************************************************************************/
@@ -37,7 +37,7 @@ class FaunaController extends Controller
             'categories' => FaunaCategory::orderBy('sort', 'DESC')->get()
         ]);
     }
-    
+
     /**
      * Shows the create fauna category page.
      *
@@ -49,7 +49,7 @@ class FaunaController extends Controller
             'category' => new FaunaCategory
         ]);
     }
-    
+
     /**
      * Shows the edit fauna category page.
      *
@@ -78,7 +78,7 @@ class FaunaController extends Controller
         $id ? $request->validate(FaunaCategory::$updateRules) : $request->validate(FaunaCategory::$createRules);
 
         $data = $request->only([
-            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary'
+            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'summary'
         ]);
         if($id && $service->updateFaunaCategory(FaunaCategory::find($id), $data, Auth::user())) {
             flash('Fauna category updated successfully.')->success();
@@ -149,7 +149,7 @@ class FaunaController extends Controller
 
 
     /**********************************************************************************************
-    
+
         FAUNA
 
     **********************************************************************************************/
@@ -165,7 +165,7 @@ class FaunaController extends Controller
             'faunas' => Fauna::orderBy('sort', 'DESC')->get()
         ]);
     }
-    
+
     /**
      * Shows the create fauna fauna page.
      *
@@ -181,7 +181,7 @@ class FaunaController extends Controller
             'locations' => Location::all()->pluck('name','id')->toArray(),
         ]);
     }
-    
+
     /**
      * Shows the edit fauna fauna page.
      *
@@ -216,7 +216,7 @@ class FaunaController extends Controller
         $data = $request->only([
             'name', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary', 'category_id', 'item_id', 'location_id', 'scientific_name'
         ]);
-        
+
         if($id && $service->updateFauna(Fauna::find($id), $data, Auth::user())) {
             flash('Fauna updated successfully.')->success();
         }
@@ -282,5 +282,5 @@ class FaunaController extends Controller
     }
 
 
-    
+
 }

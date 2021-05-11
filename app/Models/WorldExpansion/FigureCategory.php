@@ -21,7 +21,7 @@ class FigureCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 'is_active'
+        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension'
     ];
 
 
@@ -31,9 +31,9 @@ class FigureCategory extends Model
      * @var string
      */
     protected $table = 'figure_categories';
-    
+
     public $timestamps = true;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -46,7 +46,7 @@ class FigureCategory extends Model
         'image' => 'mimes:png,gif,jpg,jpeg',
         'image_th' => 'mimes:png,gif,jpg,jpeg',
     ];
-    
+
     /**
      * Validation rules for updating.
      *
@@ -62,23 +62,23 @@ class FigureCategory extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
     **********************************************************************************************/
 
     /**
      * Get the location attached to this type.
      */
-    public function figures() 
+    public function figures()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Figure', 'category_id');
+        return $this->hasMany('App\Models\WorldExpansion\Figure', 'category_id')->visible();
     }
 
 
-    
+
 
     /**********************************************************************************************
-    
+
         ACCESSORS
     **********************************************************************************************/
 
@@ -121,7 +121,7 @@ class FigureCategory extends Model
     {
         return $this->id . '-image.' . $this->image_extension;
     }
-    
+
 
     /**
      * Gets the file name of the model's thumbnail image.
@@ -143,7 +143,7 @@ class FigureCategory extends Model
         if (!$this->image_extension) return null;
         return asset($this->imageDirectory . '/' . $this->imageFileName);
     }
-    
+
     /**
      * Gets the URL of the model's thumbnail image.
      *
@@ -154,7 +154,7 @@ class FigureCategory extends Model
         if (!$this->thumb_extension) return null;
         return asset($this->imageDirectory . '/' . $this->thumbFileName);
     }
-    
+
 
     /**
      * Gets the URL of the model's encyclopedia page.
@@ -175,6 +175,6 @@ class FigureCategory extends Model
     {
         return url('world/figures?category_id='.$this->id.'&sort=category');
     }
-    
+
 
 }

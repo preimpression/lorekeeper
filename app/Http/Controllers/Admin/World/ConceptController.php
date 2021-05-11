@@ -78,7 +78,7 @@ class ConceptController extends Controller
         $id ? $request->validate(ConceptCategory::$updateRules) : $request->validate(ConceptCategory::$createRules);
 
         $data = $request->only([
-            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary'
+            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'summary'
         ]);
         if($id && $service->updateConceptCategory(ConceptCategory::find($id), $data, Auth::user())) {
             flash('Concept category updated successfully.')->success();

@@ -15,7 +15,7 @@ class LocationType extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'names',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 'is_active'
+        'name', 'names',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension'
     ];
 
 
@@ -25,9 +25,9 @@ class LocationType extends Model
      * @var string
      */
     protected $table = 'location_types';
-    
+
     public $timestamps = true;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -41,7 +41,7 @@ class LocationType extends Model
         'image' => 'mimes:png,gif,jpg,jpeg',
         'image_th' => 'mimes:png,gif,jpg,jpeg',
     ];
-    
+
     /**
      * Validation rules for updating.
      *
@@ -58,23 +58,23 @@ class LocationType extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
     **********************************************************************************************/
 
     /**
      * Get the location attached to this type.
      */
-    public function locations() 
+    public function locations()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Location', 'type_id');
+        return $this->hasMany('App\Models\WorldExpansion\Location', 'type_id')->visible();
     }
 
 
-    
+
 
     /**********************************************************************************************
-    
+
         ACCESSORS
     **********************************************************************************************/
 
@@ -126,7 +126,7 @@ class LocationType extends Model
     {
         return $this->id . '-image.' . $this->image_extension;
     }
-    
+
 
     /**
      * Gets the file name of the model's thumbnail image.
@@ -148,7 +148,7 @@ class LocationType extends Model
         if (!$this->image_extension) return null;
         return asset($this->imageDirectory . '/' . $this->imageFileName);
     }
-    
+
     /**
      * Gets the URL of the model's thumbnail image.
      *
@@ -159,7 +159,7 @@ class LocationType extends Model
         if (!$this->thumb_extension) return null;
         return asset($this->imageDirectory . '/' . $this->thumbFileName);
     }
-    
+
 
     /**
      * Gets the URL of the model's encyclopedia page.
@@ -180,6 +180,6 @@ class LocationType extends Model
     {
         return url('world/locations?type_id='.$this->id.'&sort=type');
     }
-    
+
 
 }

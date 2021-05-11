@@ -6,7 +6,7 @@
 {!! breadcrumbs(['World' => 'world', 'Figure' => 'world/figures', $figure->name => 'world/figures/'.$figure->id]) !!}
 <h1 ><img src="{{$figure->thumbUrl}}" style="max-height:25px;vertical-align:inherit;"/>{!! $figure->displayName !!}</h1>
 <h5>{!! $figure->category ? ucfirst($figure->category->displayName) : 'Miscellaneous' !!}
-    {!! $figure->faction ? '・ Part of '.ucfirst($figure->faction->displayName) : '' !!}{!! $figure->factionRank ? ' ('.$figure->factionRank->name.')' : null !!}</div>
+    {!! $figure->faction ? '・ Part of '.ucfirst($figure->faction->displayName) : '' !!}{!! $figure->factionRank ? ' ('.$figure->factionRank->name.')' : null !!}
 
 @if($figure->birth_date || $figure->death_date)
     <span class="ml-4 text-muted">{!! $figure->birth_date ? 'Born: '.format_date($figure->birth_date, false) : 'Born: Unknown' !!} {!! $figure->death_date ? '- Died: '.format_date($figure->death_date, false) : '- Died: Unknown' !!}</span>

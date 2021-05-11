@@ -84,7 +84,7 @@ class FigureController extends Controller
         $id ? $request->validate(FigureCategory::$updateRules) : $request->validate(FigureCategory::$createRules);
 
         $data = $request->only([
-            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'is_active', 'summary'
+            'name', 'names', 'description', 'image', 'image_th', 'remove_image', 'remove_image_th', 'summary'
         ]);
         if($id && $service->updateFigureCategory(FigureCategory::find($id), $data, Auth::user())) {
             flash('Figure category updated successfully.')->success();

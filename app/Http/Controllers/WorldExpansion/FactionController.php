@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\WorldExpansion;
 
+use Auth;
+use Settings;
+
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\Controller;
-use Settings;
 
 use App\Models\SitePage;
 use App\Models\WorldExpansion\FaunaCategory;
@@ -27,22 +29,6 @@ class FactionController extends Controller
     | This controller shows factions and their types.
     |
     */
-
-    /**
-     * Shows the factions page.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function getWorld()
-    {
-        $world = SitePage::where('key','world')->first();
-        if(!$world) abort(404);
-
-        return view('worldexpansion.world', [
-            'world' => $world
-        ]);
-    }
 
     /**
      * Shows the index page.
@@ -79,7 +65,7 @@ class FactionController extends Controller
      */
     public function getFactionType($id)
     {
-        $type = FactionType::where('is_active',1)->find($id);
+        $type = FactionType::find($id);
         if(!$type) abort(404);
 
         return view('worldexpansion.faction_type_page', [
@@ -124,10 +110,12 @@ class FactionController extends Controller
         }
         else $query->sortFactionType();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.factions', [
             'factions' => $query->paginate(20)->appends($request->query()),
             'types' => ['none' => 'Any Type'] + FactionType::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'loctypes' => FactionType::where('is_active',1)->get(),
+            'loctypes' => FactionType::get(),
             'user_enabled' => Settings::get('WE_user_factions'),
             'ch_enabled' => Settings::get('WE_character_factions')
         ]);
@@ -141,18 +129,18 @@ class FactionController extends Controller
     public function getFaction($id)
     {
         $faction = Faction::where('is_active',1)->find($id);
-        if(!$faction) abort(404);
+        if(!$faction->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.faction_page', [
             'faction' => $faction,
             'user_enabled' => Settings::get('WE_user_factions'),
-            'loctypes' => FactionType::where('is_active',1)->get(),
+            'loctypes' => FactionType::get(),
             'ch_enabled' => Settings::get('WE_character_factions'),
-            'fauna_categories' => FaunaCategory::where('is_active',1)->get(),
-            'flora_categories' => FloraCategory::where('is_active',1)->get(),
-            'event_categories' => EventCategory::where('is_active',1)->get(),
-            'figure_categories' => FigureCategory::where('is_active',1)->get(),
-            'location_categories' => LocationType::where('is_active',1)->get(),
+            'fauna_categories' => FaunaCategory::get(),
+            'flora_categories' => FloraCategory::get(),
+            'event_categories' => EventCategory::get(),
+            'figure_categories' => FigureCategory::get(),
+            'location_categories' => LocationType::get(),
             'currency' => Currency::where('id', Settings::get('WE_faction_currency'))->first()
         ]);
     }
@@ -166,8 +154,8 @@ class FactionController extends Controller
      */
     public function getFactionMembers(Request $request, $id)
     {
-        $faction = Faction::where('is_active', 1)->find($id);
-        if(!$faction) abort(404);
+        $faction = Faction::find($id);
+        if(!$faction->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         $members = $faction->factionMembers->sortByDesc(function ($members) {
             $standing = $members->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();

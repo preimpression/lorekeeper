@@ -20,7 +20,7 @@ class ConceptCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 'is_active'
+        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension'
     ];
 
 
@@ -70,7 +70,7 @@ class ConceptCategory extends Model
      */
     public function concepts()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Concept', 'category_id');
+        return $this->hasMany('App\Models\WorldExpansion\Concept', 'category_id')->visible();
     }
 
     /**********************************************************************************************

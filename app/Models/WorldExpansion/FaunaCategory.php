@@ -21,7 +21,7 @@ class FaunaCategory extends Model
      * @var array
      */
     protected $fillable = [
-        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 'is_active'
+        'name',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension'
     ];
 
 
@@ -31,9 +31,9 @@ class FaunaCategory extends Model
      * @var string
      */
     protected $table = 'fauna_categories';
-    
+
     public $timestamps = true;
-    
+
     /**
      * Validation rules for creation.
      *
@@ -46,7 +46,7 @@ class FaunaCategory extends Model
         'image' => 'mimes:png,gif,jpg,jpeg',
         'image_th' => 'mimes:png,gif,jpg,jpeg',
     ];
-    
+
     /**
      * Validation rules for updating.
      *
@@ -62,23 +62,23 @@ class FaunaCategory extends Model
 
 
     /**********************************************************************************************
-    
+
         RELATIONS
     **********************************************************************************************/
 
     /**
      * Get the location attached to this type.
      */
-    public function faunas() 
+    public function faunas()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Fauna', 'category_id');
+        return $this->hasMany('App\Models\WorldExpansion\Fauna', 'category_id')->visible();
     }
 
 
-    
+
 
     /**********************************************************************************************
-    
+
         ACCESSORS
     **********************************************************************************************/
 
@@ -111,7 +111,7 @@ class FaunaCategory extends Model
     {
         return public_path($this->imageDirectory);
     }
-    
+
 
     /**
      * Gets the file name of the model's image.
@@ -122,7 +122,7 @@ class FaunaCategory extends Model
     {
         return $this->id . '-image.' . $this->image_extension;
     }
-    
+
 
     /**
      * Gets the file name of the model's thumbnail image.
@@ -144,7 +144,7 @@ class FaunaCategory extends Model
         if (!$this->image_extension) return null;
         return asset($this->imageDirectory . '/' . $this->imageFileName);
     }
-    
+
     /**
      * Gets the URL of the model's thumbnail image.
      *
@@ -155,7 +155,7 @@ class FaunaCategory extends Model
         if (!$this->thumb_extension) return null;
         return asset($this->imageDirectory . '/' . $this->thumbFileName);
     }
-    
+
 
     /**
      * Gets the URL of the model's encyclopedia page.
@@ -176,6 +176,6 @@ class FaunaCategory extends Model
     {
         return url('world/faunas?category_id='.$this->id.'&sort=category');
     }
-    
+
 
 }

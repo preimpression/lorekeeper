@@ -15,7 +15,7 @@ class FactionType extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'names',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension', 'is_active'
+        'name', 'names',  'description', 'summary', 'parsed_description', 'sort', 'image_extension', 'thumb_extension'
     ];
 
 
@@ -67,7 +67,7 @@ class FactionType extends Model
      */
     public function factions()
     {
-        return $this->hasMany('App\Models\WorldExpansion\Faction', 'type_id');
+        return $this->hasMany('App\Models\WorldExpansion\Faction', 'type_id')->visible();
     }
 
     /**********************************************************************************************

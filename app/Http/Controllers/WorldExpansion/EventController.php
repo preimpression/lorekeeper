@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WorldExpansion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use Settings;
 
 use App\Models\WorldExpansion\Location;
@@ -59,7 +60,7 @@ class EventController extends Controller
      */
     public function getEventCategory($id)
     {
-        $category = EventCategory::where('is_active',1)->find($id);
+        $category = EventCategory::find($id);
         if(!$category) abort(404);
 
         return view('worldexpansion.event_category_page', [
@@ -104,6 +105,8 @@ class EventController extends Controller
         }
         else $query->sortCategory();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.events', [
             'events' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + EventCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
@@ -118,15 +121,15 @@ class EventController extends Controller
      */
     public function getEvent($id)
     {
-        $event = Event::where('is_active',1)->find($id);
-        if(!$event) abort(404);
+        $event = Event::find($id);
+        if(!$event->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.event_page', [
             'event' => $event,
-            'figure_categories'  => FigureCategory::where('is_active',1)->get(),
-            'location_types'  => LocationType::where('is_active',1)->get(),
-            'faction_types'  => FactionType::where('is_active',1)->get(),
-            'event_categories'  => EventCategory::where('is_active',1)->get(),
+            'figure_categories'  => FigureCategory::get(),
+            'location_types'  => LocationType::get(),
+            'faction_types'  => FactionType::get(),
+            'event_categories'  => EventCategory::get(),
             'prompt_categories'  => PromptCategory::get(),
         ]);
     }

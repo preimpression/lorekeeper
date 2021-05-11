@@ -5,6 +5,7 @@ namespace App\Http\Controllers\WorldExpansion;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+use Auth;
 use Settings;
 
 use App\Models\WorldExpansion\Concept;
@@ -52,7 +53,7 @@ class ConceptController extends Controller
      */
     public function getConceptCategory($id)
     {
-        $category = ConceptCategory::where('is_active',1)->find($id);
+        $category = ConceptCategory::find($id);
         if(!$category) abort(404);
 
         return view('worldexpansion.concept_category_page', [
@@ -97,6 +98,8 @@ class ConceptController extends Controller
         }
         else $query->sortCategory();
 
+        if(!Auth::check() || !(Auth::check() && Auth::user()->isStaff)) $query->visible();
+
         return view('worldexpansion.concepts', [
             'concepts' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + ConceptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
@@ -111,15 +114,15 @@ class ConceptController extends Controller
      */
     public function getConcept($id)
     {
-        $concept = Concept::where('is_active',1)->find($id);
-        if(!$concept) abort(404);
+        $concept = Concept::find($id);
+        if(!$concept->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.concept_page', [
             'concept' => $concept,
-            'concept_categories'  => ConceptCategory::where('is_active',1)->get(),
-            'flora_categories'  => FloraCategory::where('is_active',1)->get(),
+            'concept_categories'  => ConceptCategory::get(),
+            'flora_categories'  => FloraCategory::get(),
             'item_categories'   => ItemCategory::get(),
-            'location_types'     => LocationType::where('is_active',1)->get(),
+            'location_types'     => LocationType::get(),
         ]);
     }
 
