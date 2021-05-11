@@ -574,6 +574,6 @@ Route::group(['prefix' => 'world',  'namespace' => 'World', 'middleware' => 'pow
     Route::post('concepts/create', 'ConceptController@postCreateEditConcept');
     Route::post('concepts/edit/{id?}', 'ConceptController@postCreateEditConcept');
     Route::post('concepts/delete/{id}', 'ConceptController@postDeleteConcept');
-    Route::post('concepts/sort', 'FaunaController@postSortConcept');
+    Route::post('concepts/sort', 'ConceptController@postSortConcept');
 
 });
