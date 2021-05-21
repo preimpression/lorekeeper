@@ -121,7 +121,7 @@ class NatureController extends Controller
     public function getFauna($id)
     {
         $fauna = Fauna::find($id);
-        if(!$fauna->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$fauna || !$fauna->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.fauna_page', [
             'fauna' => $fauna,
@@ -221,7 +221,7 @@ class NatureController extends Controller
     public function getFlora($id)
     {
         $flora = Flora::find($id);
-        if(!$flora->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$flora || !$flora->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.flora_page', [
             'flora' => $flora,
