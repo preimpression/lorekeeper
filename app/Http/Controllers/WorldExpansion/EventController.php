@@ -122,7 +122,7 @@ class EventController extends Controller
     public function getEvent($id)
     {
         $event = Event::find($id);
-        if(!$event->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$event || !$event->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.event_page', [
             'event' => $event,

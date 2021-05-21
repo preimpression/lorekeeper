@@ -120,7 +120,7 @@ class FigureController extends Controller
     public function getFigure($id)
     {
         $figure = Figure::find($id);
-        if(!$figure->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$figure || !$figure->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.figure_page', [
             'figure' => $figure,

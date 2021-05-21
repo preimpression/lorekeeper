@@ -145,7 +145,7 @@ class LocationController extends Controller
     public function getLocation($id)
     {
         $location = Location::find($id);
-        if(!$location->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$location || !$location->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.location_page', [
             'location' => $location,

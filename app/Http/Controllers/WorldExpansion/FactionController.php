@@ -155,7 +155,7 @@ class FactionController extends Controller
     public function getFactionMembers(Request $request, $id)
     {
         $faction = Faction::find($id);
-        if(!$faction->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$faction || !$faction->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         $members = $faction->factionMembers->sortByDesc(function ($members) {
             $standing = $members->getCurrencies(true)->where('id', Settings::get('WE_faction_currency'))->first();

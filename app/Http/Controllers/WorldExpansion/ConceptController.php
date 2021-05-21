@@ -115,7 +115,7 @@ class ConceptController extends Controller
     public function getConcept($id)
     {
         $concept = Concept::find($id);
-        if(!$concept->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
+        if(!$concept || !$concept->is_active && (!Auth::check() || !(Auth::check() && Auth::user()->isStaff))) abort(404);
 
         return view('worldexpansion.concept_page', [
             'concept' => $concept,
