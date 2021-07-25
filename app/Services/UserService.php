@@ -105,6 +105,7 @@ class UserService extends Service
 
             if($user->canChangeLocation) {
                 $user->home_id = $id;
+                $user->home_changed = Carbon::now();
                 $user->save();
             }
             else throw new \Exception("You can't change your location yet!");
@@ -137,6 +138,7 @@ class UserService extends Service
 
             if($user->canChangeFaction) {
                 $user->faction_id = $id;
+                $user->faction_changed = Carbon::now();
                 $user->save();
             }
             else throw new \Exception("You can't change your faction yet!");
