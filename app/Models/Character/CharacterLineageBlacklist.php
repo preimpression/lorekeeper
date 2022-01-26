@@ -163,7 +163,7 @@ class CharacterLineageBlacklist extends Model
             ->whereNotIn('rarity_id',  CharacterLineageBlacklist::getBlacklistRarities())
             ->join('character_images', 'characters.character_image_id', '=', 'character_images.id')
             ->whereNotIn('species_id', CharacterLineageBlacklist::getBlacklistSpecies())
-            ->whereNotIn('suptype_id', CharacterLineageBlacklist::getBlacklistSubtypes())
+            ->whereNotIn('subtype_id', CharacterLineageBlacklist::getBlacklistSubtypes())
             ->orderBy('slug')
             ->selectRaw('characters.id, IF(name IS NOT NULL, concat(slug, \': \', name), slug) as \'lineage_select_name\'')
             ->pluck('lineage_select_name', 'characters.id')
