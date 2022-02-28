@@ -54,4 +54,9 @@ return [
         'default_recipient' => 0, // 0 to default to the character's owner (if a user), 1 to default to the submission user.
     ],
 
+    // World Expansion - Uri
+    'world_expansion' => [
+        'batched' => 0, // Set to 1 if you have the extension and wish to enable batching of WE models.
+    ],
+
 ];

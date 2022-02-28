@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Batch\BatchTarget;
+namespace App\Models\Batch;
 
 use Config;
 use App\Models\Model;
@@ -106,48 +106,5 @@ class BatchTarget extends Model
     **********************************************************************************************/
 
 
-    /**
-     * Gets the target keys for an array
-     *
-     * @return array
-     */
-    function getTargetKeys()
-    {
-        return [
-
-            // Standard
-            'items', 'shops', 'prompts', 'newses', 'sales', 'site_pages', 'raffles', 'galleries',
-
-            // World Expansion
-            // 'concepts', 'events', 'factions', 'faunas', 'floras', 'figures', 'locations',
-
-        ];
-    }
-
-
-    /**
-     * Gets the model name for an asset type.
-     * The asset type has to correspond to one of the asset keys above.
-     *
-     * @param  string  $type
-     * @param  bool    $namespaced
-     * @return string
-     */
-    function getAssetModelString($type, $namespaced = true)
-    {
-        switch($type)
-        {
-            case 'items':
-                if($namespaced) return '\App\Models\Item\Item';
-                else return 'Item';
-                break;
-
-            case 'characters':
-                if($namespaced) return '\App\Models\Character\Character';
-                else return 'Character';
-                break;
-        }
-        return null;
-    }
 
 }

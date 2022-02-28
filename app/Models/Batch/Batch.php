@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Model;
 
-class LootTable extends Model
+class Batch extends Model
 {
     use SoftDeletes;
 
@@ -18,7 +18,7 @@ class LootTable extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name', 'trigger_at'
     ];
 
     /**
@@ -53,6 +53,13 @@ class LootTable extends Model
      */
     public $timestamps = true;
 
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    public $dates = ['trigger_at'];
+
     /**********************************************************************************************
 
         RELATIONS
@@ -65,14 +72,6 @@ class LootTable extends Model
     public function targets()
     {
         return $this->hasMany('App\Models\Batch\BatchTarget', 'batch_id');
-    }
-
-    /**
-     * Get the triggers for this batch.
-     */
-    public function triggers()
-    {
-        return $this->hasMany('App\Models\Batch\BatchTrigger', 'batch_id');
     }
 
     /**********************************************************************************************

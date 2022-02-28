@@ -129,8 +129,8 @@ return [
         'power' => 'edit_data',
         'links' => [
             [
-                'name' => 'Galleries',
-                'url' => 'admin/data/galleries'
+                'name' => 'Visibility Batches',
+                'url' => 'admin/data/batches'
             ],
             [
                 'name' => 'Character Categories',
@@ -175,6 +175,10 @@ return [
             [
                 'name' => 'Items',
                 'url' => 'admin/data/items'
+            ],
+            [
+                'name' => 'Galleries',
+                'url' => 'admin/data/galleries'
             ],
         ]
     ],

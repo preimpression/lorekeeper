@@ -150,6 +150,17 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('items/tag/{id}', 'ItemController@getAddItemTag');
     Route::post('items/tag/{id}', 'ItemController@postAddItemTag');
 
+    # BATCHES
+    Route::get('batches', 'BatchController@getBatchIndex');
+    Route::get('batches/create', 'BatchController@getCreateEditBatch');
+    Route::get('batches/edit/{id?}', 'BatchController@getCreateEditBatch');
+    Route::get('batches/delete/{id}', 'BatchController@getDeleteBatch');
+    Route::post('batches/create', 'BatchController@postCreateEditBatch');
+    Route::post('batches/edit/{id?}', 'BatchController@postCreateEditBatch');
+    Route::post('batches/delete/{id}', 'BatchController@postDeleteBatch');
+    Route::get('batches/trigger/{id}', 'BatchController@getTriggerBatch');
+    Route::post('batches/trigger/{id?}', 'BatchController@postTriggerBatch');
+
     # SHOPS
     Route::get('shops', 'ShopController@getIndex');
     Route::get('shops/create', 'ShopController@getCreateShop');

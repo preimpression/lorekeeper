@@ -16,6 +16,7 @@ class CreateBatchesTables extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->timestamp('trigger_at')->nullable()->default(null);             // In the absense of triggers, this will trigger at a particular time
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,16 +27,6 @@ class CreateBatchesTables extends Migration
 
             $table->string('target_type');                  // Model type of target
             $table->integer('target_id')->unsigned();       // ID of target
-        });
-
-        Schema::create('batch_triggers', function (Blueprint $table) {
-            $table->id();
-            $table->integer('batch_id')->unsigned()->index();                        // ID of Batch
-
-            $table->string('trigger_type')->nullable()->default(null);              // Model type and string of trigger
-            $table->integer('trigger_id')->unsigned()->nullable()->default(null);   // ID of trigger
-
-            $table->timestamp('trigger_at')->nullable()->default(null);             // In the absense of a trigger type and id, this will trigger at a particular time
         });
     }
 
@@ -48,6 +39,5 @@ class CreateBatchesTables extends Migration
     {
         Schema::dropIfExists('batches');
         Schema::dropIfExists('batch_targets');
-        Schema::dropIfExists('batch_triggers');
     }
 }
