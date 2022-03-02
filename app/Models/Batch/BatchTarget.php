@@ -54,42 +54,42 @@ class BatchTarget extends Model
     /**
      * Get the reward attached to the loot entry.
      */
-    public function reward()
+    public function target()
     {
         switch ($this->target_type)
         {
             case 'Item':
-                return $this->belongsTo('App\Models\Item\Item', 'batch_id');
+                return $this->belongsTo('App\Models\Item\Item', 'target_id');
             case 'Shop':
-                return $this->belongsTo('App\Models\Shop\Shop', 'batch_id');
+                return $this->belongsTo('App\Models\Shop\Shop', 'target_id');
             case 'Prompt':
-                return $this->belongsTo('App\Models\Prompt\Prompt', 'batch_id');
+                return $this->belongsTo('App\Models\Prompt\Prompt', 'target_id');
             case 'News':
-                return $this->belongsTo('App\Models\News', 'batch_id');
+                return $this->belongsTo('App\Models\News', 'target_id');
             case 'Sales':
-                return $this->belongsTo('App\Models\Sales', 'batch_id');
+                return $this->belongsTo('App\Models\Sales\Sales', 'target_id');
             case 'SitePage':
-                return $this->belongsTo('App\Models\SitePage', 'batch_id');
+                return $this->belongsTo('App\Models\SitePage', 'target_id');
             case 'Raffle':
-                return $this->belongsTo('App\Models\Raffle\Raffle', 'batch_id');
-            case 'Gallery':
-                return $this->belongsTo('App\Models\Gallery\Gallery', 'batch_id');
+                return $this->belongsTo('App\Models\Raffle\Raffle', 'target_id');
+            case 'Character':
+                return $this->belongsTo('App\Models\Character\Character', 'target_id');
 
             // World Expansion - Uncomment these if you have this extension and want them to be included.
             case 'Location':
-                return $this->belongsTo('App\Models\WorldExpansion\Location', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Location', 'target_id');
             case 'Event':
-                return $this->belongsTo('App\Models\WorldExpansion\Event', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Event', 'target_id');
             case 'Fauna':
-                return $this->belongsTo('App\Models\WorldExpansion\Fauna', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Fauna', 'target_id');
             case 'Flora':
-                return $this->belongsTo('App\Models\WorldExpansion\Flora', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Flora', 'target_id');
             case 'Faction':
-                return $this->belongsTo('App\Models\WorldExpansion\Faction', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Faction', 'target_id');
             case 'Concept':
-                return $this->belongsTo('App\Models\WorldExpansion\Concept', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Concept', 'target_id');
             case 'Figure':
-                return $this->belongsTo('App\Models\WorldExpansion\Figure', 'batch_id');
+                return $this->belongsTo('App\Models\WorldExpansion\Figure', 'target_id');
 
 
             case 'None':

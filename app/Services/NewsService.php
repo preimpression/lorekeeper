@@ -40,7 +40,7 @@ class NewsService extends Service
             if($news->is_visible) $this->alertUsers();
 
             return $this->commitReturn($news);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -50,7 +50,7 @@ class NewsService extends Service
      * Updates a news post.
      *
      * @param  \App\Models\News       $news
-     * @param  array                  $data 
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
      * @return bool|\App\Models\News
      */
@@ -67,7 +67,7 @@ class NewsService extends Service
             $news->update($data);
 
             return $this->commitReturn($news);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -87,7 +87,7 @@ class NewsService extends Service
             $news->delete();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
@@ -110,7 +110,7 @@ class NewsService extends Service
                 $this->alertUsers();
 
                 return $this->commitReturn(true);
-            } catch(\Exception $e) { 
+            } catch(\Exception $e) {
                 $this->setError('error', $e->getMessage());
             }
             return $this->rollbackReturn(false);
@@ -123,7 +123,7 @@ class NewsService extends Service
      *
      * @return bool
      */
-    private function alertUsers()
+    public function alertUsers()
     {
         User::query()->update(['is_news_unread' => 1]);
         return true;

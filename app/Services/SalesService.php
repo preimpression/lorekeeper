@@ -210,7 +210,7 @@ class SalesService extends Service
      *
      * @return bool
      */
-    private function alertUsers()
+    public function alertUsers()
     {
         User::query()->update(['is_sales_unread' => 1]);
         return true;

@@ -121,6 +121,57 @@ class BatchService extends Service
         return $this->rollbackReturn(false);
     }
 
+    /**
+     * Triggers a batch.
+     *
+     * @param  \App\Models\Batch\Batch  $batch
+     * @return bool
+     */
+    public function triggerBatch($batch)
+    {
+        DB::beginTransaction();
+
+        try {
+            foreach($batch->targets as $target) if(!$this->activateTarget($target)) throw new \Exception("Unable to activate ".($target->target->name ? $target->target->name : $target->target->title));
+            $batch->delete();
+
+            return $this->commitReturn(true);
+        } catch(\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+        return $this->rollbackReturn(false);
+    }
+
+
+    /**
+     * Activates a target
+     *
+     * @param  \App\Models\Batch\BatchTarget  $target
+     * @return bool
+     */
+    private function activateTarget($target)
+    {
+
+        // Using $ring instead of $target, etc, to make it clear that it is not the actual item/news post etc being deleted by the ->delete() function!
+
+        $ring = $target->target;
+
+        // Sets activity to true depending on method of determining activity.
+        if(isset($ring->is_active)) $ring->update(['is_active' => 1]);
+        elseif(isset($ring->is_released)) $ring->update(['is_released' => 1]);
+        elseif(isset($ring->is_visible)) {
+            $ring->update(['is_visible' => 1]);
+            if($target->target_type == 'News') (new NewsService)->alertUsers();
+            elseif($target->target_type == 'Sale') (new SaleService)->alertUsers();
+        }
+        else return false;
+
+        $ring->save();
+        $target->delete();
+
+        return $ring;
+    }
+
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Data;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 use Auth;
 use Config;
@@ -20,15 +21,6 @@ use App\Models\SitePage;
 use App\Models\Raffle\Raffle;
 use App\Models\Character\Character;
 
-// WORLD EXPANSION. UNCOMMENT THE FOLLOWING if you have the extension and want to use this! Otherwise **it will error**
-// use App\Models\WorldExpansion\Concept;
-// use App\Models\WorldExpansion\Event;
-// use App\Models\WorldExpansion\Faction;
-// use App\Models\WorldExpansion\Fauna;
-// use App\Models\WorldExpansion\Flora;
-// use App\Models\WorldExpansion\Figure;
-// use App\Models\WorldExpansion\Location;
-
 use App\Http\Controllers\Controller;
 use App\Services\BatchService;
 
@@ -44,13 +36,13 @@ class BatchController extends Controller
      */
     public function getBatchIndex(Request $request)
     {
-        $batches = Batch::query();
-        if ($request->get('is_active')) $batches->where('is_active', $request->get('is_active'));
-        else $batches->where('is_active', '!=', 2);
-        $batches = $batches->orderBy('name');
+        $query = Batch::query();
+        $data = $request->only(['name']);
+        if(isset($data['name']))
+            $query->where('name', 'LIKE', '%'.$data['name'].'%');
 
         return view('admin.batches.index', [
-            'batches' => $batches->get(),
+            'batches' => $query->paginate(20)->appends($request->query()),
         ]);
     }
 
@@ -80,14 +72,15 @@ class BatchController extends Controller
             'sales'         => Sales::orderBy('title')->where('is_visible',0)->pluck('title', 'id'),
             'sitepages'     => SitePage::orderBy('title')->where('is_visible',0)->pluck('title', 'id'),
             ] +
-            (Config::get('lorekeeper.extensions.world_expansion.batched') ? [
-                'locations'     => Location::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'events'        => Event::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'concepts'      => Concept::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'faunas'        => Fauna::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'floras'        => Flora::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'figures'       => Figure::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
-                'factions'      => Faction::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+            (Schema::hasTable('locations') ? [
+                'world_expanded' => true,
+                'locations'      => \App\Models\WorldExpansion\Location::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'events'         => \App\Models\WorldExpansion\Event::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'concepts'       => \App\Models\WorldExpansion\Concept::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'faunas'         => \App\Models\WorldExpansion\Fauna::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'floras'         => \App\Models\WorldExpansion\Flora::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'figures'        => \App\Models\WorldExpansion\Figure::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
+                'factions'       => \App\Models\WorldExpansion\Faction::orderBy('name')->where('is_active',0)->pluck('name', 'id'),
             ] : [])
         );
     }
@@ -167,8 +160,15 @@ class BatchController extends Controller
      */
     public function postTriggerBatch(Request $request, BatchService $service, $id)
     {
-        if($id && $service->deleteBatch(Batch::find($id))) {
-            flash('Batch deleted successfully.')->success();
+        $batch = Batch::findOrFail($id);
+        $targetgroups = [];
+        foreach($batch->targets as $target){
+            $targetgroups[$target->target_type][] = $target->target->displayName;
+        }
+
+        if($id && $service->triggerBatch($batch)) {
+            flash('Batch triggered successfully. It has been soft deleted and all targets have been cleared.')->success();
+            foreach($targetgroups as $key => $item) flash('The following '.strtolower($key).(count($item) == 1 ? ' has' : 's have').' been activated: '.implode(', ', $item).'.')->success();
         }
         else {
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
