@@ -50,7 +50,7 @@
                 <div class="target-row row ubt-top py-1 no-gutters">
                     <div class="col-6">{!! Form::select('target_type[]', [
                         'Item' => 'Item', 'Shop' => 'Shop', 'Prompt' => 'Prompt', 'News' => 'News', 'Sales' => 'Sale', 'SitePage' => 'Site Page', 'Raffle' => 'Raffle', 'Character' => 'Character',
-                        ] + (isset($world_expanded)) ? [
+                        ] + (isset($world_expanded) ? [
                             'Location' => 'Location', 'Event' => 'Event', 'Concept' => 'Concept', 'Fauna' => 'Fauna', 'Flora' => 'Flora', 'Figure' => 'Figure', 'Faction' => 'Faction',
                         ] : [])
                         , $target->target_type, ['class' => 'form-control reward-type', 'placeholder' => 'Select Target Type']) !!}</div>
@@ -105,7 +105,7 @@
             <div class="target-row row ubt-top  no-gutters py-1">
                 <div class="col-6">{!! Form::select('target_type[]', [
                     'Item' => 'Item', 'Shop' => 'Shop', 'Prompt' => 'Prompt', 'News' => 'News', 'Sales' => 'Sale', 'SitePage' => 'Site Page', 'Raffle' => 'Raffle', 'Character' => 'Character',
-                    ] + (isset($world_expanded)) ? [
+                    ] + (isset($world_expanded) ? [
                         'Location' => 'Location', 'Event' => 'Event', 'Concept' => 'Concept', 'Fauna' => 'Fauna', 'Flora' => 'Flora', 'Figure' => 'Figure', 'Faction' => 'Faction',
                     ] : [])
                     , null, ['class' => 'form-control reward-type', 'placeholder' => 'Select Target Type']) !!}</div>
@@ -121,7 +121,7 @@
     {!! Form::select('target_id[]', $sitepages, null, ['class' => 'form-control sitepage-select', 'placeholder' => 'Select Site Page']) !!}
     {!! Form::select('target_id[]', $raffles, null, ['class' => 'form-control raffle-select', 'placeholder' => 'Select Raffle']) !!}
     {!! Form::select('target_id[]', $characters, null, ['class' => 'form-control character-select', 'placeholder' => 'Select Character']) !!}
-    @if(isset($world_expanded)))
+    @if(isset($world_expanded))
         {!! Form::select('target_id[]', $locations, null, ['class' => 'form-control location-select', 'placeholder' => 'Select Location']) !!}
         {!! Form::select('target_id[]', $events, null, ['class' => 'form-control event-select', 'placeholder' => 'Select Event']) !!}
         {!! Form::select('target_id[]', $concepts, null, ['class' => 'form-control concept-select', 'placeholder' => 'Select Concept']) !!}

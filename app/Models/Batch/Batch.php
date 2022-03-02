@@ -5,6 +5,7 @@ namespace App\Models\Batch;
 use Config;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon;
 
 use App\Models\Model;
 
@@ -72,6 +73,24 @@ class Batch extends Model
     public function targets()
     {
         return $this->hasMany('App\Models\Batch\BatchTarget', 'batch_id');
+    }
+
+    /**********************************************************************************************
+
+        SCOPES
+
+    **********************************************************************************************/
+
+
+    /**
+     * Scope a query to only include batches that should be triggered.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeShouldBeTriggered($query)
+    {
+        return $query->whereNotNull('trigger_at')->where('trigger_at', '<', Carbon::now());
     }
 
     /**********************************************************************************************

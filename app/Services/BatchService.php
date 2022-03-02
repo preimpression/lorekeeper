@@ -173,6 +173,28 @@ class BatchService extends Service
     }
 
 
+    /**
+     * Updates queued batches and triggers them.
+     *
+     * @return bool
+     */
+    public function updateQueue()
+    {
+        $batches = Batch::shouldBeTriggered()->get();
+        if($batches->count()) {
+            DB::beginTransaction();
+
+            try {
+                foreach($batches as $batch) $this->triggerBatch($batch);
+
+                return $this->commitReturn(true);
+            } catch(\Exception $e) {
+                $this->setError('error', $e->getMessage());
+            }
+            return $this->rollbackReturn(false);
+        }
+    }
+
 
 
     /**
