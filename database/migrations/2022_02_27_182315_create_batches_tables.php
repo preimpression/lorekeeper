@@ -16,7 +16,7 @@ class CreateBatchesTables extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamp('trigger_at')->nullable()->default(null);             // In the absense of triggers, this will trigger at a particular time
+            $table->timestamp('trigger_at')->nullable()->default(null);  // Optional automated trigger time
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +27,15 @@ class CreateBatchesTables extends Migration
 
             $table->string('target_type');                  // Model type of target
             $table->integer('target_id')->unsigned();       // ID of target
+        });
+
+        Schema::create('batch_logs', function (Blueprint $table) {
+            $table->id();
+            $table->string('batch_name');                                       // For quick reference
+            $table->integer('batch_id')->unsigned();                            // ID of Batch. Yes, it's soft deleted, but it's good to keep track.
+            $table->integer('staff_id')->unsigned()->nullable()->default(null); // ID of Batch
+            $table->text('data');                                               // To keep track of targets
+            $table->timestamps();
         });
     }
 
@@ -39,5 +48,6 @@ class CreateBatchesTables extends Migration
     {
         Schema::dropIfExists('batches');
         Schema::dropIfExists('batch_targets');
+        Schema::dropIfExists('batch_logs');
     }
 }

@@ -152,6 +152,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
 
     # BATCHES
     Route::get('batches', 'BatchController@getBatchIndex');
+    Route::get('batches/history', 'BatchController@getBatchHistory');
     Route::get('batches/create', 'BatchController@getCreateEditBatch');
     Route::get('batches/edit/{id?}', 'BatchController@getCreateEditBatch');
     Route::get('batches/delete/{id}', 'BatchController@getDeleteBatch');

@@ -9,7 +9,7 @@ use Auth;
 use Config;
 
 use App\Models\Batch\Batch;
-use App\Models\Batch\BatchTrigger;
+use App\Models\Batch\BatchLog;
 use App\Models\Batch\BatchTarget;
 
 use App\Models\Item\Item;
@@ -174,6 +174,25 @@ class BatchController extends Controller
             foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->to('admin/data/batches');
+    }
+    /**
+     * Show the design index page.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string                    $type
+     * @param  string                    $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getBatchHistory(Request $request)
+    {
+        $query = BatchLog::query();
+        $data = $request->only(['name']);
+        if(isset($data['name']))
+            $query->where('batch_name', 'LIKE', '%'.$data['name'].'%');
+
+        return view('admin.batches.history', [
+            'logs' => $query->paginate(20)->appends($request->query()),
+        ]);
     }
 
 }

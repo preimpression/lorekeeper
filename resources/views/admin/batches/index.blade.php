@@ -7,8 +7,7 @@
 
 <h1>Batches</h1>
 
-<p>This is a list of batches in the game.</p>
-
+<p>This is a list of batches in the game. See <a href="{{ url('admin/data/batches/history') }}">history of triggered batches.</a> </p>
 
 <div>
     {!! Form::open(['method' => 'GET', 'class' => 'form-inline justify-content-end']) !!}
@@ -25,7 +24,7 @@
 </div>
 
 @if(!count($batches))
-    <p>No batches found.</p>
+    <p class="text-center"><small>No batches found.</small></p>
 @else
     {!! $batches->render() !!}
 

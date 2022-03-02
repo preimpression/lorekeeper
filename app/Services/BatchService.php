@@ -4,6 +4,8 @@ use App\Services\Service;
 
 use DB;
 use Config;
+use Auth;
+use Carbon\Carbon;
 
 use Illuminate\Support\Arr;
 use App\Models\Batch\Batch;
@@ -132,7 +134,12 @@ class BatchService extends Service
         DB::beginTransaction();
 
         try {
+            $targetgroups = [];
+            foreach($batch->targets as $target) $targetgroups[$target->target_type][] = $target->target->displayName;
+
             foreach($batch->targets as $target) if(!$this->activateTarget($target)) throw new \Exception("Unable to activate ".($target->target->name ? $target->target->name : $target->target->title));
+            if(!$this->createLog($batch, $targetgroups, (Auth::check() ? Auth::user()->id : null))) throw new \Exception("Unable to log trigger.");
+
             $batch->delete();
 
             return $this->commitReturn(true);
@@ -203,7 +210,7 @@ class BatchService extends Service
      * @param  bool  $isCharacter
      * @return array
      */
-    function createTargetArray()
+    private function createTargetArray()
     {
         $keys = $this->getTargetKeys();
         $targets = [];
@@ -217,7 +224,7 @@ class BatchService extends Service
      *
      * @return array
      */
-    function getTargetKeys()
+    private function getTargetKeys()
     {
         return [
 
@@ -230,6 +237,30 @@ class BatchService extends Service
         ];
     }
 
+
+    /**
+     * Logs
+     *
+     * @param  object    $batch
+     * @param  array     $targetgroups
+     * @param  integer   $user
+     * @return array
+     */
+    private function createLog($batch, $targetgroups, $user = null)
+    {
+        $data = json_encode($targetgroups);
+        return DB::table('batch_logs')->insert(
+            [
+                'batch_name'    => $batch->name,
+                'batch_id'      => $batch->id,
+                'staff_id'      => $user,
+                'data'          => $data, // this should be just a string
+                'created_at'    => Carbon::now(),
+                'updated_at'    => Carbon::now(),
+            ]
+        );
+    }
+
     /**
      * Gets the model name for an asset type.
      * The asset type has to correspond to one of the asset keys above.
@@ -238,7 +269,7 @@ class BatchService extends Service
      * @param  bool    $namespaced
      * @return string
      */
-    function getAssetModelString($type, $namespaced = true)
+    private function getAssetModelString($type, $namespaced = true)
     {
         switch($type)
         {
