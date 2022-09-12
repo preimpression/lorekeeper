@@ -353,8 +353,15 @@ class User extends Authenticatable implements MustVerifyEmail
       $online = Carbon::createFromTimeStamp(strtotime(Cache::get('user-is-online-time-' . $this->id)));
       $onlineTime = isset($this->last_seen) ? Carbon::parse($this->last_seen)->diffForHumans() : 'A long time ago.';
 
-      if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" data-toggle="tooltip" title="This user is online."></i>';
-      else  $result = '<i class="far fa-circle text-secondary mr-2" data-toggle="tooltip" title="This user was last online ' . $onlineTime .'."></i>';
+    switch($this->settings->last_online_setting) {
+        case 0:
+            return '<i class="far fa-circle text-faded mr-2" data-toggle="tooltip" title="This user\'s online status is hidden"></i>';
+        break;
+        case 1:
+            if($onlineStatus) $result = '<i class="fas fa-circle text-success mr-2" data-toggle="tooltip" title="This user is online."></i>';
+            else  $result = '<i class="far fa-circle text-secondary mr-2" data-toggle="tooltip" title="This user was last online ' . $onlineTime .'."></i>';
+        break;
+    }
 
       return $result;
     }

@@ -148,6 +148,17 @@ class UserService extends Service
     }
 
     /**
+     * Updates user's last-online setting
+     */
+    public function updateLastOnline($data, $user)
+    {
+        $user->settings->last_online_setting = $data;
+        $user->settings->save();
+
+        return true;
+    }
+
+    /**
      * Updates the user's avatar. 
      *
      * @param  array                  $data
