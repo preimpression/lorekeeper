@@ -24,8 +24,7 @@
                     <div class="col-md-6">
                         <h3 class="text-center">Thumbnail Image</h3>
                         <div class="text-center">
-                            <a href="{{ $request->thumbnailUrl }}" data-lightbox="entry" data-title="Request #{{ $request->id }} thumbnail"><img src="{{ $request->thumbnailUrl }}" class="mw-100"
-                                    alt="Thumbnail for request {{ $request->id }}" /></a>
+                            <a href="{{ $request->thumbnailUrl }}" data-lightbox="entry" data-title="Request #{{ $request->id }} thumbnail"><img src="{{ $request->thumbnailUrl }}" class="mw-100" alt="Thumbnail for request {{ $request->id }}" /></a>
                         </div>
                     </div>
                 </div>
@@ -108,13 +107,15 @@
                 </div>
             </div>
         @endif
-        <div class="card mb-3" id="thumbnailUpload">
-            <div class="card-body">
-                {!! Form::label('Thumbnail Image') !!} {!! add_help('This image is shown on the masterlist page.') !!}
-                <div>{!! Form::file('thumbnail') !!}</div>
-                <div class="text-muted">Recommended size: {{ Config::get('lorekeeper.settings.masterlist_thumbnails.width') }}px x {{ Config::get('lorekeeper.settings.masterlist_thumbnails.height') }}px</div>
+        @if (Config::get('lorekeeper.settings.masterlist_image_automation') === 0 || Config::get('lorekeeper.settings.masterlist_image_automation_hide_manual_thumbnail') === 0 || Auth::user()->hasPower('manage_characters'))
+            <div class="card mb-3" id="thumbnailUpload">
+                <div class="card-body">
+                    {!! Form::label('Thumbnail Image') !!} {!! add_help('This image is shown on the masterlist page.') !!}
+                    <div>{!! Form::file('thumbnail') !!}</div>
+                    <div class="text-muted">Recommended size: {{ Config::get('lorekeeper.settings.masterlist_thumbnails.width') }}px x {{ Config::get('lorekeeper.settings.masterlist_thumbnails.height') }}px</div>
+                </div>
             </div>
-        </div>
+        @endif
         <p>
             This section is for crediting the image creators. The first box is for the designer or artist's on-site username (if any). The second is for a link to the designer or artist if they don't have an account on the site.
         </p>

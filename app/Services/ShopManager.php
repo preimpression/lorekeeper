@@ -76,6 +76,9 @@ class ShopManager extends Service {
                 if (!$character) {
                     throw new \Exception('Please enter a valid character code.');
                 }
+                if ($character->user_id != $user->id) {
+                    throw new \Exception('That character does not belong to you.');
+                }
                 if (!(new CurrencyManager)->debitCurrency($character, null, 'Shop Purchase', 'Purchased '.$shopStock->item->name.' from '.$shop->name, $shopStock->currency, $total_cost)) {
                     throw new \Exception('Not enough currency to make this purchase.');
                 }
@@ -111,7 +114,7 @@ class ShopManager extends Service {
 
             // Give the user the item, noting down 1. whose currency was used (user or character) 2. who purchased it 3. which shop it was purchased from
             if (!(new InventoryManager)->creditItem(null, $user, 'Shop Purchase', [
-                'data' => $shopLog->itemData,
+                'data'  => $shopLog->itemData,
                 'notes' => 'Purchased '.format_date($shopLog->created_at),
             ], $shopStock->item, $quantity)) {
                 throw new \Exception('Failed to purchase item.');
