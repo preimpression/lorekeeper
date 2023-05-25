@@ -8,8 +8,8 @@
             <div class="sidebar-item"><a href="{{ url('news') }}" class="{{ set_active('news') }}">All News >></a></div>
     <li class="sidebar-section">
         <div class="sidebar-section-header">Dev Logs</div>
-        @foreach($logs->take(5) as $devLogs)
-            <div class="sidebar-item"><a href="{{ $devLogs->url }}" class="{{ set_active('logs/'.$devLogs->id.'*') }}">{{ $devLogs->title }}</a></div>
+        @foreach($logs->take(5) as $log)
+            <div class="sidebar-item"><a href="{{ $log->url }}" class="{{ set_active('logs/'.$log->id.'*') }}">{{ $log->title }}</a></div>
         @endforeach
             <div class="sidebar-item"><a href="{{ url('logs') }}" class="{{ set_active('logs') }}">All Logs >></a></div>
 </ul>
