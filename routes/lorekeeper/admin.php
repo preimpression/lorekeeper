@@ -258,13 +258,13 @@ Route::group(['prefix' => 'news', 'middleware' => 'power:edit_pages'], function(
 # DEV LOGS
 Route::group(['prefix' => 'logs', 'middleware' => 'power:edit_pages'], function() {
 
-    Route::get('/', 'DevLogsController@getIndex');
-    Route::get('create', 'DevLogsController@getCreateLogs');
-    Route::get('edit/{id}', 'DevLogsController@getEditLogs');
-    Route::get('delete/{id}', 'DevLogsController@getDeleteLogs');
-    Route::post('create', 'DevLogsController@postCreateEditLogs');
-    Route::post('edit/{id?}', 'DevLogsController@postCreateEditLogs');
-    Route::post('delete/{id}', 'DevLogsController@postDeleteLogs');
+    Route::get('/', 'DevLogController@getIndex');
+    Route::get('create', 'DevLogController@getCreateLog');
+    Route::get('edit/{id}', 'DevLogController@getEditLog');
+    Route::get('delete/{id}', 'DevLogController@getDeleteLogs');
+    Route::post('create', 'DevLogController@postCreateEditLogs');
+    Route::post('edit/{id?}', 'DevLogController@postCreateEditLogs');
+    Route::post('delete/{id}', 'DevLogController@postDeleteLogs');
 });
 
 # SALES

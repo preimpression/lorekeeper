@@ -6,27 +6,27 @@ use DB;
 use Config;
 
 use App\Models\User\User;
-use App\Models\DevLogs;
+use App\Models\DevLog;
 
-class DevLogsService extends Service
+class DevLogService extends Service
 {
     /*
     |--------------------------------------------------------------------------
     | Logs Service
     |--------------------------------------------------------------------------
     |
-    | Handles the creation and editing of dev logs.
+    | Handles the creation and editing of devlogs.
     |
     */
 
     /**
-     * Creates a dev log post.
+     * Creates a devlog.
      *
      * @param  array                  $data
      * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\DevLogs
+     * @return bool|\App\Models\DevLog
      */
-    public function createLogs($data, $user)
+    public function createLog($data, $user)
     {
         DB::beginTransaction();
 
@@ -35,26 +35,26 @@ class DevLogsService extends Service
             $data['user_id'] = $user->id;
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
 
-            $devLogs = DevLogs::create($data);
+            $log = DevLog::create($data);
 
-            if($devLogs->is_visible) $this->alertUsers();
+            if($log->is_visible) $this->alertUsers();
 
-            return $this->commitReturn($devLogs);
-        } catch(\Exception $e) { 
+            return $this->commitReturn($log);
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
     /**
-     * Updates a dev log post.
+     * Updates a devlog.
      *
-     * @param  \App\Models\DevLogs       $devLogs
-     * @param  array                  $data 
+     * @param  \App\Models\DevLog       $devLogs
+     * @param  array                  $data
      * @param  \App\Models\User\User  $user
-     * @return bool|\App\Models\DevLogs
+     * @return bool|\App\Models\DevLog
      */
-    public function updateDevLogs($devLogs, $data, $user)
+    public function updateDevLog($log, $data, $user)
     {
         DB::beginTransaction();
 
@@ -64,53 +64,53 @@ class DevLogsService extends Service
             if(!isset($data['is_visible'])) $data['is_visible'] = 0;
             if(isset($data['bump']) && $data['is_visible'] == 1 && $data['bump'] == 1) $this->alertUsers();
 
-            $devLogs->update($data);
+            $log->update($data);
 
-            return $this->commitReturn($devLogs);
-        } catch(\Exception $e) { 
+            return $this->commitReturn($log);
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
     /**
-     * Deletes a dev log post.
+     * Deletes a devlog.
      *
-     * @param  \App\Models\DevLogs  $devLogs
+     * @param  \App\Models\DevLog  $log
      * @return bool
      */
-    public function deleteLogs($devLogs)
+    public function deleteLog($log)
     {
         DB::beginTransaction();
 
         try {
-            $devLogs->delete();
+            $log->delete();
 
             return $this->commitReturn(true);
-        } catch(\Exception $e) { 
+        } catch(\Exception $e) {
             $this->setError('error', $e->getMessage());
         }
         return $this->rollbackReturn(false);
     }
 
     /**
-     * Updates queued dev log posts to be visible and alert users when
+     * Updates queued devlogs to be visible and alert users when
      * they should be posted.
      *
      * @return bool
      */
     public function updateQueue()
     {
-        $count = DevLogs::shouldBeVisible()->count();
+        $count = DevLog::shouldBeVisible()->count();
         if($count) {
             DB::beginTransaction();
 
             try {
-                DevLogs::shouldBeVisible()->update(['is_visible' => 1]);
+                DevLog::shouldBeVisible()->update(['is_visible' => 1]);
                 $this->alertUsers();
 
                 return $this->commitReturn(true);
-            } catch(\Exception $e) { 
+            } catch(\Exception $e) {
                 $this->setError('error', $e->getMessage());
             }
             return $this->rollbackReturn(false);
@@ -118,8 +118,8 @@ class DevLogsService extends Service
     }
 
     /**
-     * Updates the unread dev log flag for all users so that
-     * the new dev log notification is displayed.
+     * Updates the unread devlog flag for all users so that
+     * the new devlog notification is displayed.
      *
      * @return bool
      */

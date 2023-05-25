@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDevLogsTable extends Migration
+class CreateDevLogTable extends Migration
 {
     /**
      * Run the migrations.

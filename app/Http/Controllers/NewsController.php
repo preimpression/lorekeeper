@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\News;
-use App\Models\DevLogs;
+use App\Models\DevLog;
 
 class NewsController extends Controller
 {
@@ -31,10 +31,10 @@ class NewsController extends Controller
         if(Auth::check() && Auth::user()->is_news_unread) Auth::user()->update(['is_news_unread' => 0]);
         return view('news.index', [
             'newses' => News::visible()->orderBy('updated_at', 'DESC')->paginate(10),
-            'devLogses' => DevLogs::visible()->orderBy('updated_at', 'DESC')->paginate(10)
+            'logs' => DevLog::visible()->orderBy('updated_at', 'DESC')->paginate(10)
         ]);
     }
-    
+
     /**
      * Shows a news post.
      *
@@ -46,6 +46,10 @@ class NewsController extends Controller
     {
         $news = News::where('id', $id)->where('is_visible', 1)->first();
         if(!$news) abort(404);
-        return view('news.news', ['news' => $news]);
+        return view('news.news', [
+            'news'      => $news,
+            'newses'    => News::visible()->orderBy('updated_at', 'DESC')->paginate(10),
+            'logs'      => DevLog::visible()->orderBy('updated_at', 'DESC')->paginate(10),
+        ]);
     }
 }

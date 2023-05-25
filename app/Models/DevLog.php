@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 
 use App\Traits\Commentable;
 
-class DevLogs extends Model
+class DevLog extends Model
 {
     use Commentable;
     /**
@@ -51,7 +51,7 @@ class DevLogs extends Model
         'title' => 'required|between:3,100',
         'text' => 'required',
     ];
-    
+
     /**
      * Validation rules for updating.
      *
@@ -63,21 +63,21 @@ class DevLogs extends Model
     ];
 
     /**********************************************************************************************
-    
+
         RELATIONS
 
     **********************************************************************************************/
-    
+
     /**
      * Get the user who created the log post.
      */
-    public function user() 
+    public function user()
     {
         return $this->belongsTo('App\Models\User\User');
     }
 
     /**********************************************************************************************
-    
+
         SCOPES
 
     **********************************************************************************************/
@@ -105,7 +105,7 @@ class DevLogs extends Model
     }
 
     /**********************************************************************************************
-    
+
         ACCESSORS
 
     **********************************************************************************************/

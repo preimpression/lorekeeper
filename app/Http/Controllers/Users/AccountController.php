@@ -38,7 +38,7 @@ class AccountController extends Controller
     {
         if(Auth::user()->is_banned)
             return view('account.banned');
-        else 
+        else
             return redirect()->to('/');
     }
 
@@ -51,7 +51,7 @@ class AccountController extends Controller
     {
         return view('account.settings');
     }
-    
+
     /**
      * Edits the user's profile.
      *
@@ -84,7 +84,7 @@ class AccountController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Changes the user's password.
      *
@@ -106,7 +106,7 @@ class AccountController extends Controller
         }
         return redirect()->back();
     }
-    
+
     /**
      * Changes the user's email address and sends a verification email.
      *
@@ -147,7 +147,7 @@ class AccountController extends Controller
     }
 
     /**
-     * Changes user dev log notification setting
+     * Changes user devlog notification setting
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  App\Services\UserService  $service
@@ -180,7 +180,7 @@ class AccountController extends Controller
             'notifications' => $notifications
         ]);
     }
-    
+
     /**
      * Deletes a notification and returns a response.
      *

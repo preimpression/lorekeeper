@@ -2,6 +2,10 @@
 
 @section('title') {{ $news->title }} @endsection
 
+@section('sidebar')
+    @include('news._sidebar')
+@endsection
+
 @section('content')
     {!! breadcrumbs(['Site News' => 'news', $news->title => $news->url]) !!}
     @include('news._news', ['news' => $news, 'page' => TRUE])
@@ -13,4 +17,4 @@
     ])
 
 @endsection
-    
+

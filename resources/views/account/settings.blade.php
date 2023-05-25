@@ -59,7 +59,7 @@
             <div class="form-group row">
                 <label class="col-md-2 col-form-label">Setting</label>
                 <div class="col-md-10">
-                    {!! Form::select('dev_log_notif', ['0' => '0: Do not receive an alert for unread dev log(s).', '1' => '1: Receive alerts for unread dev log(s).'],Auth::user()->settings->dev_log_notif, ['class' => 'form-control']) !!}
+                    {!! Form::select('dev_log_notif', ['0' => '0: Do not receive an alert for unread devlog(s).', '1' => '1: Receive alerts for unread devlog(s).'],Auth::user()->settings->dev_log_notif, ['class' => 'form-control']) !!}
                 </div>
             </div>
             <div class="text-right">
