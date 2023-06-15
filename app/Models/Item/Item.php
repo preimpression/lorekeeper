@@ -21,7 +21,7 @@ class Item extends Model
      */
     protected $fillable = [
         'item_category_id', 'name', 'has_image', 'description', 'parsed_description', 'allow_transfer',
-        'data', 'reference_url', 'artist_alias', 'artist_url', 'artist_id', 'is_released'
+        'data', 'is_released',
     ];
 
     protected $appends = ['image_url'];
@@ -44,7 +44,6 @@ class Item extends Model
         'description' => 'nullable',
         'image' => 'mimes:png',
         'rarity' => 'nullable',
-        'reference_url' => 'nullable|between:3,200',
         'uses' => 'nullable|between:3,250',
         'release' => 'nullable|between:3,100',
         'currency_quantity' => 'nullable|integer|min:1',
@@ -60,7 +59,6 @@ class Item extends Model
         'name' => 'required|between:3,100',
         'description' => 'nullable',
         'image' => 'mimes:png',
-        'reference_url' => 'nullable|between:3,200',
         'uses' => 'nullable|between:3,250',
         'release' => 'nullable|between:3,100',
         'currency_quantity' => 'nullable|integer|min:1',
@@ -86,14 +84,6 @@ class Item extends Model
     public function tags()
     {
         return $this->hasMany('App\Models\Item\ItemTag', 'item_id');
-    }
-
-    /**
-     * Get the user that drew the item art.
-     */
-    public function artist()
-    {
-        return $this->belongsTo('App\Models\User\User', 'artist_id');
     }
 
     /**********************************************************************************************
@@ -247,44 +237,6 @@ class Item extends Model
     }
 
     /**
-     * Get the artist of the item's image.
-     *
-     * @return string
-     */
-    public function getItemArtistAttribute()
-    {
-        if(!$this->artist_url && !$this->artist_id) return null;
-
-        // Check to see if the artist exists on site
-        $artist = checkAlias($this->artist_url, false);
-        if(is_object($artist)) {
-            $this->artist_id = $artist->id;
-            $this->artist_url = null;
-            $this->save();
-        }
-
-        if($this->artist_id)
-        {
-            return $this->artist->displayName;
-        }
-        else if ($this->artist_url)
-        {
-            return prettyProfileLink($this->artist_url);
-        }
-    }
-
-    /**
-     * Get the reference url attribute.
-     *
-     * @return string
-     */
-    public function getReferenceAttribute()
-    {
-        if (!$this->reference_url) return null;
-        return $this->reference_url;
-    }
-
-    /**
      * Get the data attribute as an associative array.
      *
      * @return array
@@ -293,6 +245,23 @@ class Item extends Model
     {
         if (!$this->id) return null;
         return json_decode($this->attributes['data'], true);
+    }
+
+    public function getCreditsAttribute(){
+        return isset($this->data['credits']) ? $this->data['credits'] : null;
+    }
+
+    public function getPrettyCreditsAttribute(){
+
+        $credits = [];
+
+        foreach($this->credits as $credit){
+            $text = isset($credit['name']) ? $credit['name'] :  (isset($credit['id']) ? User::find($credit['id'])->name : (isset($credit['url']) ? $credit['url'] : 'artist'));
+            $link = isset($credit['url']) ? $credit['url'] :  (isset($credit['id']) ? User::find($credit['id'])->url : '#');
+            $role = isset($credit['role']) ? '<small>('.$credit['role'].')</small>' : null;
+            $credits[] = '<a href="'.$link.'" target="_blank">'.$text.'</a> '. $role;
+        }
+        return $credits;
     }
 
     /**

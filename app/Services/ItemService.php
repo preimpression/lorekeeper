@@ -214,6 +214,7 @@ class ItemService extends Service
                     'release' => isset($data['release']) && $data['release'] ? $data['release'] : null,
                     'prompts' => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
                     'resell' => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
+                    'credits' => isset($data['credits']) && $data['credits'] ? $data['credits'] : null,
                     ]) // rarity, availability info (original source, purchase locations, drop locations)
             ]);
 
@@ -245,7 +246,7 @@ class ItemService extends Service
             if(Item::where('name', $data['name'])->where('id', '!=', $item->id)->exists()) throw new \Exception("The name has already been taken.");
             if((isset($data['item_category_id']) && $data['item_category_id']) && !ItemCategory::where('id', $data['item_category_id'])->exists()) throw new \Exception("The selected item category is invalid.");
 
-            $data = $this->populateData($data);
+            $data = $this->populateData($data, $item);
 
             $image = null;
             if(isset($data['image']) && $data['image']) {
@@ -263,6 +264,7 @@ class ItemService extends Service
                     'release' => isset($data['release']) && $data['release'] ? $data['release'] : null,
                     'prompts' => isset($data['prompts']) && $data['prompts'] ? $data['prompts'] : null,
                     'resell' => isset($data['currency_quantity']) ? [$data['currency_id'] => $data['currency_quantity']] : null,
+                    'credits' => isset($data['credits']) && $data['credits'] ? $data['credits'] : null,
                     ]) // rarity, availability info (original source, purchase locations, drop locations)
             ]);
 
@@ -290,6 +292,22 @@ class ItemService extends Service
         if(!isset($data['allow_transfer'])) $data['allow_transfer'] = 0;
         if(!isset($data['is_released']) && Config::get('lorekeeper.extensions.item_entry_expansion.extra_fields')) $data['is_released'] = 0;
         else $data['is_released'] = 1;
+
+        $data['credits'] = [];
+        if(isset($data['credit-name']))
+            foreach($data['credit-name'] as $key => $name) {
+                $data['credits'][] = [
+                    'name'  => $name,
+                    'url'   => $data['credit-url'][$key],
+                    'id'    => (int)$data['credit-id'][$key],
+                    'role'  => $data['credit-role'][$key],
+                ];
+            }
+
+        unset($data['credit-name']);
+        unset($data['credit-url']);
+        unset($data['credit-id']);
+        unset($data['credit-role']);
 
         if(isset($data['remove_image']))
         {

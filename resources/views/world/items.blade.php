@@ -12,14 +12,12 @@
             <div class="form-group ml-3 mb-3">
                 {!! Form::text('name', Request::get('name'), ['class' => 'form-control', 'placeholder' => 'Name']) !!}
             </div>
-            <div class="form-group ml-3 mb-3">
-                {!! Form::select('item_category_id', $categories, Request::get('item_category_id'), ['class' => 'form-control']) !!}
+            <div class="form-group ml-3 mb-2">
+                {!! Form::select('item_category_id', $categories, Request::get('item_category_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select a Category     ']) !!}
             </div>
-            @if(Config::get('lorekeeper.extensions.item_entry_expansion.extra_fields'))
-                <div class="form-group ml-3 mb-3">
-                    {!! Form::select('artist', $artists, Request::get('artist'), ['class' => 'form-control']) !!}
-                </div>
-            @endif
+            <div class="form-group ml-3 mb-2">
+                {!! Form::select('artist', $artists, Request::get('artist'), ['class' => 'form-control selectize', 'placeholder' => 'Select an Artist     ']) !!}
+            </div>
         </div>
         <div class="form-inline justify-content-end">
             <div class="form-group ml-3 mb-3">
@@ -53,4 +51,9 @@
 
 <div class="text-center mt-4 small text-muted">{{ $items->total() }} result{{ $items->total() == 1 ? '' : 's' }} found.</div>
 
+<script>
+    $(document).ready(function() {
+        $('.selectize').selectize();
+    });
+</script>
 @endsection

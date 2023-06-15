@@ -249,8 +249,9 @@ class WorldController extends Controller
             $query->where('item_category_id', $data['item_category_id']);
         if(isset($data['name']))
             $query->where('name', 'LIKE', '%'.$data['name'].'%');
+
         if(isset($data['artist']) && $data['artist'] != 'none')
-            $query->where('artist_id', $data['artist']);
+            $query->where('data', 'LIKE BINARY', '%"id":'.$data['artist'].',%');
 
         if(isset($data['sort']))
         {
@@ -278,7 +279,7 @@ class WorldController extends Controller
             'items' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + ItemCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'shops' => Shop::orderBy('sort', 'DESC')->get(),
-            'artists' => ['none' => 'Any Artist'] + User::whereIn('id', Item::whereNotNull('artist_id')->pluck('artist_id')->toArray())->pluck('name', 'id')->toArray()
+            'artists' => ['none' => 'Any Artist'] + User::get()->pluck('name', 'id')->toArray()
         ]);
     }
 
