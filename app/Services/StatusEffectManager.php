@@ -97,15 +97,15 @@ class StatusEffectManager extends Service
 
         try {
             if(is_numeric($status)) $status = StatusEffect::find($status);
-            {
-                $record = CharacterStatusEffect::where('character_id', $recipient->id)->where('status_effect_id', $status->id)->first();
-                if($record) {
-                    CharacterStatusEffect::where('character_id', $recipient->id)->where('status_effect_id', $status->id)->update(['quantity' => $record->quantity + $quantity]);
-                }
-                else {
-                    $record = CharacterStatusEffect::create(['character_id' => $recipient->id, 'status_effect_id' => $status->id, 'quantity' => $quantity]);
-                }
+            
+            $record = CharacterStatusEffect::where('character_id', $recipient->id)->where('status_effect_id', $status->id)->first();
+            if($record) {
+                CharacterStatusEffect::where('character_id', $recipient->id)->where('status_effect_id', $status->id)->update(['quantity' => $record->quantity + $quantity]);
             }
+            else {
+                $record = CharacterStatusEffect::create(['character_id' => $recipient->id, 'status_effect_id' => $status->id, 'quantity' => $quantity]);
+            }
+            
 
             if($type && !$this->createLog($sender ? $sender->id : null, $sender ? $sender->logType : null,
             $recipient ? $recipient->id : null, $recipient ? $recipient->logType : null,
@@ -134,12 +134,11 @@ class StatusEffectManager extends Service
         DB::beginTransaction();
 
         try {
-            {
-                $record = CharacterStatusEffect::where('character_id', $sender->id)->where('status_effect_id', $status->id)->first();
-                if(!$record || $record->quantity < $quantity) throw new \Exception("Not enough ".$status->name." to carry out this action.");
+        
+            $record = CharacterStatusEffect::where('character_id', $sender->id)->where('status_effect_id', $status->id)->first();
+            if(!$record || $record->quantity < $quantity) throw new \Exception("Not enough ".$status->name." to carry out this action.");
 
-                CharacterStatusEffect::where('character_id', $sender->id)->where('status_effect_id', $status->id)->update(['quantity' => $record->quantity - $quantity]);
-            }
+            CharacterStatusEffect::where('character_id', $sender->id)->where('status_effect_id', $status->id)->update(['quantity' => $record->quantity - $quantity]);
 
             if($type && !$this->createLog($sender ? $sender->id : null, $sender ? $sender->logType : null,
             $recipient ? $recipient->id : null, $recipient ? $recipient->logType : null,
