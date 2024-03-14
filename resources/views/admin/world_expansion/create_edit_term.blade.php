@@ -41,7 +41,7 @@
             </div>
             <div id="attachmentsBody" class="row col-12 px-0">
                 @php
-                    $items               = \App\Models\Item\Item::orderBy('name')->pluck('name', 'id');
+                    // $items               = \App\Models\Item\Item::orderBy('name')->pluck('name', 'id');
                     $locations           = \App\Models\WorldExpansion\Location::getLocationsByType();
                     $figures             = \App\Models\WorldExpansion\Figure::getFiguresByCategory();
                     $faunas              = \App\Models\WorldExpansion\Fauna::getFaunasByCategory();
@@ -59,9 +59,9 @@
                             ], $term->link_type, ['class' => 'form-control attachment-type', 'placeholder' => 'Select Attachment Type']) !!}
                     </div>
                     <div class="col-6 attachment-row-select">
-                        @if($term->link_type == 'Item')
-                            {!! Form::select('attachment_id[]', $items, $term->link_id, ['class' => 'form-control item-select', 'placeholder' => 'Select Item']) !!}
-                        @elseif($term->link_type == 'Figure')
+                        {{-- @if($term->link_type == 'Item')
+                            {!! Form::select('attachment_id[]', $items, $term->link_id, ['class' => 'form-control item-select', 'placeholder' => 'Select Item']) !!} --}}
+                        @if($term->link_type == 'Figure')
                             {!! Form::select('attachment_id[]', $figures, $term->link_id, ['class' => 'form-control figure-select', 'placeholder' => 'Select Figure']) !!}
                         @elseif($term->link_type == 'Fauna')
                             {!! Form::select('attachment_id[]', $faunas, $term->link_id, ['class' => 'form-control fauna-select', 'placeholder' => 'Select Fauna']) !!}
