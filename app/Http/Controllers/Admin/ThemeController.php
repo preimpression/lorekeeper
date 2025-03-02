@@ -40,18 +40,20 @@ class ThemeController extends Controller
         {
             switch($data['sort']) {
                 case 'newest':
-                    $submissions->sortNewest();
+                    $query->sortNewest();
                     break;
                 case 'oldest':
-                    $submissions->sortOldest();
+                    $query->sortOldest();
                     break;
                 case 'name_desc':
-                    $submissions->sortAlphabetical(true);
+                    $query->sortAlphabetical(true);
                     break;
                 case 'name_asc':
-                    $submissions->sortAlphabetical();
+                    $query->sortAlphabetical();
                     break;
             }
+        } else {
+            $query->sortNewest();
         }
 
         if(isset($data['name']))
