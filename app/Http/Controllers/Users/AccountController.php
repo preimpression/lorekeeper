@@ -147,6 +147,24 @@ class AccountController extends Controller
     }
 
     /**
+     * Changes user last-online setting
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\UserService  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postLastOnline(Request $request, UserService $service)
+    {
+        if($service->updateLastOnline($request->input('last_online_setting'), Auth::user())) {
+            flash('Setting updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
      * Shows the notifications page.
      *
      * @return \Illuminate\Contracts\Support\Renderable

@@ -53,6 +53,21 @@
 </div>
 
 <div class="card p-3 mb-2">
+    <h3>Last-Online Publicity</h3>
+    {!! Form::open(['url' => 'account/last-online']) !!}
+        <div class="form-group row">
+            <label class="col-md-2 col-form-label">Setting</label>
+            <div class="col-md-10">
+                {!! Form::select('last_online_setting', ['0' => 'No one can see your online status.', '1' => 'Anyone can see your online status.', '2' => 'Only site staff can see your online status.', '3' => 'Only logged-in users can see your online status.'], Auth::user()->settings->last_online_setting, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+        <div class="text-right">
+            {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
+        </div>
+    {!! Form::close() !!}
+</div>
+
+<div class="card p-3 mb-2">
     <h3>Email Address</h3>
     <p>Changing your email address will require you to re-verify your email address.</p>
     {!! Form::open(['url' => 'account/email']) !!}
