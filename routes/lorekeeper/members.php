@@ -36,7 +36,6 @@ Route::group(['prefix' => 'account', 'namespace' => 'Users'], function() {
     Route::post('dob', 'AccountController@postBirthday');
     Route::post('last-online', 'AccountController@postLastOnline');
 
-
     Route::get('bookmarks', 'BookmarkController@getBookmarks');
     Route::get('bookmarks/create', 'BookmarkController@getCreateBookmark');
     Route::get('bookmarks/edit/{id}', 'BookmarkController@getEditBookmark');
