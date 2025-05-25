@@ -370,6 +370,13 @@ class User extends Authenticatable implements MustVerifyEmail
                     return $statusHidden;
                 }
             break;
+            case 3:
+                if(Auth::check()){
+                    return $statusShow;
+                } else {
+                    return $statusHidden;
+                }
+            break;
         }
     }
 

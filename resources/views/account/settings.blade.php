@@ -58,7 +58,7 @@
         <div class="form-group row">
             <label class="col-md-2 col-form-label">Setting</label>
             <div class="col-md-10">
-                {!! Form::select('last_online_setting', ['0' => '0: No one can see your online status.', '1' => '1: Anyone can see your online status.', '2' => '2: Only site staff can see your online status.'], Auth::user()->settings->last_online_setting, ['class' => 'form-control']) !!}
+                {!! Form::select('last_online_setting', ['0' => '0: No one can see your online status.', '1' => '1: Anyone can see your online status.', '2' => '2: Only site staff can see your online status.', '3' => '3: Only logged-in users can see your online status.'], Auth::user()->settings->last_online_setting, ['class' => 'form-control']) !!}
             </div>
         </div>
         <div class="text-right">
