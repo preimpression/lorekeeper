@@ -220,7 +220,7 @@ class Theme extends Model
      */
     public function getHeaderImageUrlAttribute()
     {
-        if (!$this->has_header && !$this->themeEditor?->header_image_url) return asset('images/header.png');
+        if (!$this->has_header && !$this->themeEditor?->header_image_url) return null;
         return $this->extension ? asset($this->imageDirectory . '/' . $this->headerImageFileName . '?' . $this->hash) : $this->themeEditor?->header_image_url;
     }
 
