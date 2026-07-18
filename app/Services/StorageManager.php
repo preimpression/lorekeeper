@@ -132,7 +132,7 @@ class StorageManager extends Service
         $type = 'Deposit';
 
         switch(get_class($stack)){
-            default: case 'App/Models/User/UserItem':   (new InventoryManager)->debitStack($user, $type, $data, $stack, $quantity);
+            default: case 'App/Models/User/UserItem':     if(!(new InventoryManager)->debitStack($user, $type, $data, $stack, $quantity)) return false;
             // case 'App/Models/User/UserCurrency':        (new InventoryManager)->debitCurrency($user, null, $type, $data, $stack->currency_id, $quantity);
         }
 
