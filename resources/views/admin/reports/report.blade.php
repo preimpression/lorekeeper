@@ -6,7 +6,7 @@
     {!! breadcrumbs(['Admin Panel' => 'admin', 'Report Queue' => 'admin/reports/pending', 'Report (#' . $report->id . ')' => $report->viewUrl]) !!}
 
 @if($report->status !== 'Closed')
-    @if($report->status == 'Assigned' && auth::user()->id !== $report->staff_id)
+    @if($report->status == 'Assigned' && Auth::user()->id !== $report->staff_id)
     <div class="alert alert-danger">This report is not assigned to you</div>
     @elseif($report->status == 'Pending')
     <div class="alert alert-warning">This report needs assigning</div>
@@ -52,13 +52,13 @@
             @endif
 		</div></div>
     @endif
-    
+
     @if($report->status == 'Assigned' && $report->user_id == Auth::user()->id || Auth::user()->hasPower('manage_reports'))
-    @comments([ 'model' => $report, 'perPage' => 5 ])
+    @comments([ 'type' => 'Staff-User', 'model' => $report, 'perPage' => 5 ])
     @endif
-    
+
     {!! Form::open(['url' => url()->current(), 'id' => 'reportForm']) !!}
-    @if($report->status == 'Assigned' && auth::user()->id == $report->staff_id)
+    @if($report->status == 'Assigned' && Auth::user()->id == $report->staff_id)
     @if(Auth::user()->hasPower('manage_reports'))<div class="alert alert-warning">Please include a small paragraph on the solution and as many important details as you deem necessary, as the user will no longer be able to view the comments after the report is closed</div>@endif
 		<div class="form-group">
             {!! Form::label('staff_comments', 'Staff Comments (Optional)') !!}
@@ -69,7 +69,7 @@
     @if($report->staff_id == NULL)
             <a href="#" class="btn btn-danger mr-2" id="assignButton">Assign</a>
     @endif
-    @if($report->status == 'Assigned' && auth::user()->id == $report->staff_id)
+    @if($report->status == 'Assigned' && Auth::user()->id == $report->staff_id)
             <a href="#" class="btn btn-success" id="closalButton">Close</a>
         </div>
     @endif
@@ -111,10 +111,10 @@
 @endsection
 
 @section('scripts')
-@parent 
+@parent
 @if($report->status !== 'Closed')
     <script>
-        
+
         $(document).ready(function() {
             var $confirmationModal = $('#confirmationModal');
             var $reportForm = $('#reportForm');
@@ -126,14 +126,14 @@
             var $assignButton = $('#assignButton');
             var $assignContent = $('#assignContent');
             var $assignSubmit = $('#assignSubmit');
-            
+
             $closalButton.on('click', function(e) {
                 e.preventDefault();
                 $closalContent.removeClass('hide');
                 $assignContent.addClass('hide');
                 $confirmationModal.modal('show');
             });
-            
+
             $assignButton.on('click', function(e) {
                 e.preventDefault();
                 $assignContent.removeClass('hide');
