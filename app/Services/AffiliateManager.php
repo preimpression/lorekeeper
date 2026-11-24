@@ -19,6 +19,9 @@ class AffiliateManager extends Service
         DB::beginTransaction();
 
         try {
+            if (!Settings::get('affiliates_open')) {
+                throw new \Exception('Affiliate requests are currently closed. Please try again later!');
+            }
 
             if(Auth::check()) $user = Auth::user()->id;
 
