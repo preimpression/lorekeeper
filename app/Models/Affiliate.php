@@ -45,7 +45,7 @@ class Affiliate extends Model
     public static $createRules = [
         'name' => 'unique:affiliates|required|between:2,25',
         'url' => 'required|max:100|active_url',
-        'icon_url' => 'nullable|max:100',
+        'icon_url' => 'nullable|url|max:100',
         'description' => 'nullable|max:100',
     ];
     
@@ -58,7 +58,7 @@ class Affiliate extends Model
         'name' => 'required|between:2,25',
         'url' => 'required|max:100|active_url',
         'is_featured' => 'nullable|boolean',
-        'icon_url' => 'nullable|max:100',
+        'icon_url' => 'nullable|url|max:100',
         'user_id' => 'nullable|integer',
         'staff_id' => 'nullable|integer',
         'staff_comments' => 'nullable|max:100',
